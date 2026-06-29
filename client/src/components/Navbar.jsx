@@ -71,22 +71,6 @@ export default function Sidebar() {
     return () => { try { document.documentElement.style.removeProperty('--tutor-sidebar-width'); } catch {} ; window.removeEventListener('resize', compute); };
   }, [isExpanded, isMobileMenuOpen]);
 
-  // Hide global horizontal scrollbar but keep vertical scrolling
-  useEffect(() => {
-    const prevHtmlOverflowX = document.documentElement.style.overflowX;
-    const prevBodyOverflowX = document.body.style.overflowX;
-    try {
-      document.documentElement.style.overflowX = 'hidden';
-      document.body.style.overflowX = 'hidden';
-    } catch (e) {}
-    return () => {
-      try {
-        document.documentElement.style.overflowX = prevHtmlOverflowX || '';
-        document.body.style.overflowX = prevBodyOverflowX || '';
-      } catch (e) {}
-    };
-  }, []);
-
   return (
     <>
       {/* Mobile Header (Only visible on screens < 1024px) */}
