@@ -66,12 +66,14 @@ const buildTermData = (marks, termMonths) => {
 };
 
 const categoryColorMap = {
-  MCQ: 'bg-amber-800',
-  Structure: 'bg-blue-500',
-  Structured: 'bg-blue-500',
-  Essay: 'bg-black',
-  'Essay A': 'bg-black',
-  'Essay B': 'bg-red-500',
+  mcq: 'bg-amber-900',
+  structure: 'bg-blue-500',
+  structured: 'bg-blue-500',
+  essay: 'bg-black',
+  'essay a': 'bg-black',
+  'essay part a': 'bg-black',
+  'essay b': 'bg-red-500',
+  'essay part b': 'bg-red-500',
 };
 
 const fallbackColors = [
@@ -84,8 +86,9 @@ const fallbackColors = [
 ];
 
 const getCategoryColor = (category) => {
-  if (categoryColorMap[category]) return categoryColorMap[category];
-  const index = category.length % fallbackColors.length;
+  const normalizedCategory = String(category || '').trim().toLowerCase();
+  if (categoryColorMap[normalizedCategory]) return categoryColorMap[normalizedCategory];
+  const index = normalizedCategory.length % fallbackColors.length;
   return fallbackColors[index];
 };
 

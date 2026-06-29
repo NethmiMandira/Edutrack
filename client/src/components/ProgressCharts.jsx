@@ -144,18 +144,19 @@ const ProgressCharts = ({ studentIndexNo, subjectName }) => {
   }));
 
   const categoryColorMap = {
-    Quiz: "bg-red-300",
-    Assignment: "bg-green-300",
-    "Term Test": "bg-blue-300",
-    "Past Paper": "bg-yellow-300",
-    Practical: "bg-purple-300",
-    Structure: "bg-blue-500",
-    Structured: "bg-blue-500",
-    practical: "bg-pink-300",
-    MCQ: "bg-amber-800",
-    Essay: "bg-black",
-    "Essay A": "bg-black",
-    "Essay B": "bg-red-500",
+    quiz: "bg-red-300",
+    assignment: "bg-green-300",
+    "term test": "bg-blue-300",
+    "past paper": "bg-yellow-300",
+    practical: "bg-purple-300",
+    structure: "bg-blue-500",
+    structured: "bg-blue-500",
+    mcq: "bg-amber-900",
+    essay: "bg-black",
+    "essay a": "bg-black",
+    "essay part a": "bg-black",
+    "essay b": "bg-red-500",
+    "essay part b": "bg-red-500",
   };
 
   const fallbackColors = [
@@ -171,14 +172,16 @@ const ProgressCharts = ({ studentIndexNo, subjectName }) => {
   ];
 
   const getCategoryColor = (category) => {
-    if (categoryColorMap[category]) {
-      return categoryColorMap[category];
+    const normalizedCategory = String(category || "").trim().toLowerCase();
+
+    if (categoryColorMap[normalizedCategory]) {
+      return categoryColorMap[normalizedCategory];
     }
 
     // Use a consistent hash based on category name
     let hash = 0;
-    for (let i = 0; i < category.length; i++) {
-      hash = ((hash << 5) - hash) + category.charCodeAt(i);
+    for (let i = 0; i < normalizedCategory.length; i++) {
+      hash = ((hash << 5) - hash) + normalizedCategory.charCodeAt(i);
       hash = hash & hash; // Convert to 32bit integer
     }
     const index = Math.abs(hash) % fallbackColors.length;
