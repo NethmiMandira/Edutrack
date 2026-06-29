@@ -173,7 +173,7 @@ export default function StudentForm({ onSave, onUpdate, selectedStudent, clearFo
   return (
     <form 
       onSubmit={handleSubmit}
-      className="bg-white rounded-[1.5rem] sm:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 max-w-6xl w-full mr-auto p-4 sm:p-6 lg:p-8 box-border animate-in fade-in zoom-in-95 duration-500"
+      className="bg-white rounded-[1.5rem] sm:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 max-w-4xl w-full mx-auto p-4 sm:p-6 lg:p-8 box-border animate-in fade-in zoom-in-95 duration-500"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         

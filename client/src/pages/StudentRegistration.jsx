@@ -287,7 +287,7 @@ export default function StudentRegistration() {
         className="tutor-page-shell flex-1 min-h-screen py-5 sm:py-6 md:py-8 lg:py-10 px-3 sm:px-4 md:px-6 lg:px-8"
         style={{ marginLeft: "calc(var(--tutor-sidebar-width, 5.5rem) + 0.75rem)", minWidth: "0" }}
       >
-        <div className="mx-auto w-[1600px] max-w-none">
+        <div className="mx-auto w-full max-w-7xl">
           <PageTitle title="Student Registration" className="mb-8" />
         </div>
 
@@ -320,7 +320,7 @@ export default function StudentRegistration() {
           )}
         </MessageBox>
 
-        <div className="mx-auto w-[1600px] max-w-none">
+        <div className="mx-auto w-full max-w-7xl">
           <div className="w-full">
             <StudentForm
               onSave={handleSave}
