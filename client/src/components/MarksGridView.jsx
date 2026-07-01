@@ -65,17 +65,17 @@ export default function MarksGridView({
         </div>
       </div>
 
-      <div className="hidden lg:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left">
+      <div className="hidden lg:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden w-full">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-[1180px] table-fixed border-collapse text-left">
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
-                <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Date</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Paper</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Index No</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Score</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Actions</th>
+                <th className="w-[8%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
+                <th className="w-[14%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Date</th>
+                <th className="w-[28%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Paper</th>
+                <th className="w-[18%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Index No</th>
+                <th className="w-[12%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Score</th>
+                <th className="w-[20%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Actions</th>
               </tr>
             </thead>
             
