@@ -18,9 +18,12 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
     });
   }, [students, sortOrder]);
 
-  return (
-    <div className="mt-8 sm:mt-10 md:mt-12 w-full box-border animate-in fade-in slide-in-from-bottom-4 duration-700">
-      
+          const idA = Number(a.numericId || 0);
+          const idB = Number(b.numericId || 0);
+          const dateA = a.date ? new Date(a.date).getTime() : 0;
+          const dateB = b.date ? new Date(b.date).getTime() : 0;
+          const primarySort = idA !== 0 || idB !== 0 ? idB - idA : dateB - dateA;
+          return sortOrder === "desc" ? primarySort : -primarySort;
       {/* Header & Sort Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 px-1 sm:px-2">
         <div>
@@ -117,16 +120,16 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                 <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Index No</th>
                 <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Student Name</th>
                 <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Grade</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Current Year</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Subjects</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Contact</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Email</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Date Registered</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {sortedStudents.length === 0 ? (
+                    <th className="w-[6%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
+                    <th className="w-[11%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Index No</th>
+                    <th className="w-[15%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Student Name</th>
+                    <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Grade</th>
+                    <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Current Year</th>
+                    <th className="w-[15%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Subjects</th>
+                    <th className="w-[13%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Contact</th>
+                    <th className="w-[11%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Email</th>
+                    <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Date Registered</th>
+                    <th className="w-[9%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Action</th>
                 <tr>
                   <td colSpan="10" className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
@@ -202,7 +205,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                           title="Update Student"
                         >
                           <HiOutlinePencilAlt className="text-base" />
-                          Update
+                              className="inline-flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
                         </button>
                         <button
                           onClick={() => onDelete(stu)}
@@ -210,7 +213,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                           title="Delete Student"
                         >
                           <HiOutlineTrash className="text-base" />
-                          Delete
+                              className="inline-flex items-center justify-center gap-2 bg-white border border-rose-100 text-rose-500 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full whitespace-nowrap"
                         </button>
                       </div>
                     </td>
