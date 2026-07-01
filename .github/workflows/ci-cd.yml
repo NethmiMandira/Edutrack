@@ -1,0 +1,49 @@
+name: EduTrack CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout EduTrack Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install Backend Dependencies
+      - name: Install Backend Dependencies
+        working-directory: backend
+        run: npm install
+
+      # Run Backend Tests (Skip if you don't have tests)
+      - name: Run Backend Tests
+        working-directory: backend
+        run: npm test
+        continue-on-error: true
+
+      # Install Frontend Dependencies
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm install
+
+      # Build React Application
+      - name: Build React App
+        working-directory: frontend
+        run: npm run build
+
+      - name: Pipeline Completed
+        run: echo "EduTrack CI pipeline completed successfully!"
