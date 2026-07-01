@@ -308,7 +308,7 @@ export default function StudentRegistration() {
 
   return (
     <div
-      className="student-registration-scroll h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900 overflow-x-scroll overflow-y-auto"
+      className="student-registration-scroll h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900"
       style={{ scrollbarGutter: "stable both-edges" }}
     >
       <Sidebar />
