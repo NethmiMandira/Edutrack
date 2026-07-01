@@ -8,19 +8,14 @@ import {
 } from "react-icons/hi";
 
 export default function StudentGrid({ students = [], onSelect, onDelete }) {
-  const [sortOrder, setSortOrder] = useState("desc"); // 'desc' = newest first
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const sortedStudents = useMemo(() => {
     return [...students].sort((a, b) => {
-      // Parse dates, fallback to 0 if invalid
       const dateA = a.date ? new Date(a.date).getTime() : 0;
       const dateB = b.date ? new Date(b.date).getTime() : 0;
-
-      // Primary sort by date
       const dateDiff = sortOrder === "desc" ? dateB - dateA : dateA - dateB;
       if (dateDiff !== 0) return dateDiff;
-
-      // Secondary sort by numericId (fallback for same date)
       const idA = Number(a.numericId || 0);
       const idB = Number(b.numericId || 0);
       return sortOrder === "desc" ? idB - idA : idA - idB;
@@ -36,7 +31,6 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
             Student Directory
           </h3>
         </div>
-
         <div className="flex items-center gap-3">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-widest text-[10px]">
             Sort Date
@@ -88,14 +82,9 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                 </div>
                 <span className="text-xs font-bold text-slate-400">ID {stu.numericId || "-"}</span>
               </div>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 text-sm text-slate-600">
-                <p>
-                  <span className="font-semibold text-slate-700">Grade:</span> {stu.grade || "-"}
-                </p>
-                <p>
-                  <span className="font-semibold text-slate-700">Year:</span> {stu.currentYear || "-"}
-                </p>
+                <p><span className="font-semibold text-slate-700">Grade:</span> {stu.grade || "-"}</p>
+                <p><span className="font-semibold text-slate-700">Year:</span> {stu.currentYear || "-"}</p>
                 <p className="sm:col-span-2">
                   <span className="font-semibold text-slate-700">Contact:</span>{" "}
                   {(() => {
@@ -121,7 +110,6 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                   {stu.date ? new Date(stu.date).toISOString().slice(0, 10) : "-"}
                 </p>
               </div>
-
               <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <button
                   onClick={() => onSelect(stu)}
@@ -142,8 +130,8 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
       </div>
 
       {/* Desktop Table */}
-      <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-hidden">
-        <table className="w-full border-collapse text-left">
+      <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-x-auto">
+        <table className="w-full min-w-[1200px] border-collapse text-left">
           <thead>
             <tr className="bg-slate-50/50 border-b border-slate-100">
               <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
@@ -155,7 +143,10 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
               <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Contact</th>
               <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Email</th>
               <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Date Registered</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Action</th>
+              {/* Action column with min-width to ensure buttons are visible */}
+              <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center min-w-[130px]">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50">
@@ -198,19 +189,20 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                   <td className="px-6 py-4 text-sm text-slate-500">
                     {stu.date ? new Date(stu.date).toISOString().slice(0, 10) : ""}
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  {/* Action column with min-width and reduced padding */}
+                  <td className="px-2 py-4 text-center min-w-[130px]">
                     <div className="flex flex-col justify-center items-center gap-2">
                       <button
                         onClick={() => onSelect(stu)}
-                        className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full"
+                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
                       >
-                        <HiOutlinePencilAlt className="text-base" /> Update
+                        <HiOutlinePencilAlt className="text-sm" /> Update
                       </button>
                       <button
                         onClick={() => onDelete(stu)}
-                        className="inline-flex items-center gap-2 bg-white border border-rose-100 text-rose-500 px-4 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full"
+                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-rose-100 text-rose-500 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full whitespace-nowrap"
                       >
-                        <HiOutlineTrash className="text-base" /> Delete
+                        <HiOutlineTrash className="text-sm" /> Delete
                       </button>
                     </div>
                   </td>
