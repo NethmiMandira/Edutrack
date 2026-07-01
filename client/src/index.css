@@ -15,6 +15,20 @@
 	}
 }
 
+/* Hide scrollbars on the page level (html/body) only */
+html, body {
+	overflow-x: hidden; /* prevent unwanted horizontal scroll on the page */
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none;
+	height: 0;
+	width: 0;
+}
+
 /* Styled scrollbar for tutor sidebar navigation */
 .tutor-sidebar-scroll {
 	scrollbar-width: thin;
@@ -23,6 +37,7 @@
 
 .tutor-sidebar-scroll::-webkit-scrollbar {
 	width: 8px;
+	display: block; /* override the global hide for this element */
 }
 
 .tutor-sidebar-scroll::-webkit-scrollbar-track {
@@ -40,27 +55,7 @@
 	background: linear-gradient(180deg, rgba(165, 180, 252, 0.98), rgba(99, 102, 241, 0.98));
 }
 
-/* Hide visual scrollbars globally but preserve vertical scrolling behavior */
-html, body {
-	overflow-x: hidden; /* remove horizontal scrollbar */
-	-ms-overflow-style: none; /* IE and Edge */
-	scrollbar-width: none; /* Firefox */
-}
-
-/* Apply to all scrollable elements (visual only) */
-* {
-	-ms-overflow-style: none;
-	scrollbar-width: none;
-}
-
-/* WebKit browsers */
-*::-webkit-scrollbar {
-	display: none;
-	height: 0;
-	width: 0;
-}
-
-/* Visible purple scrollbar for the Student Registration page */
+/* Visible purple scrollbar for the Student Registration page (vertical only) */
 .student-registration-scroll {
 	scrollbar-width: thin;
 	scrollbar-color: rgba(168, 85, 247, 0.95) rgba(226, 232, 240, 0.9);
@@ -102,6 +97,7 @@ html, body {
 	scrollbar-width: auto;
 	scrollbar-color: rgba(99, 102, 241, 1) rgba(226, 232, 240, 0.95);
 	scrollbar-gutter: stable both-edges;
+	overflow-x: scroll; /* force horizontal scrollbar */
 }
 
 .student-grid-scroll::-webkit-scrollbar {

@@ -139,8 +139,8 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* Tablet / Desktop Grid Layout – horizontal scroll restored via student-grid-scroll */}
-      <div className="hidden md:block w-full overflow-x-auto student-grid-scroll">
+      {/* Tablet / Desktop Grid Layout – fixed: overflow-x-scroll to force scrollbar */}
+      <div className="hidden md:block w-full overflow-x-scroll student-grid-scroll">
         <div className="min-w-[1250px] bg-white text-[13px] xl:text-sm">
           {/* Header row */}
           <div className="grid grid-cols-[5%_13%_18%_8%_8%_13%_10%_13%_8%_4%] border-b border-slate-200">
@@ -211,7 +211,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                   <div className="px-2 py-2.5 text-slate-600 truncate">
                     {stu.currentYear || "-"}
                   </div>
-                  {/* Subjects (comma list, wraps instead of forcing width) */}
+                  {/* Subjects (comma list) */}
                   <div className="px-2 py-2.5 text-slate-600 leading-tight break-words">
                     {Array.isArray(stu.subjects) && stu.subjects.length > 0
                       ? stu.subjects
@@ -220,7 +220,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                           .join(", ")
                       : "-"}
                   </div>
-                  {/* Contact (formatted with +94) */}
+                  {/* Contact */}
                   <div className="px-2 py-2.5 text-slate-600 font-medium truncate">
                     {(() => {
                       let c = stu.contact || "";
