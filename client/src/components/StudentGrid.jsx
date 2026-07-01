@@ -12,18 +12,18 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
 
   const sortedStudents = useMemo(() => {
     return [...students].sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+      const idA = Number(a.numericId || 0);
+      const idB = Number(b.numericId || 0);
+      const dateA = a.date ? new Date(a.date).getTime() : 0;
+      const dateB = b.date ? new Date(b.date).getTime() : 0;
+      const newestFirst = idA !== 0 || idB !== 0 ? idB - idA : dateB - dateA;
+      return sortOrder === "desc" ? newestFirst : -newestFirst;
     });
   }, [students, sortOrder]);
 
-          const idA = Number(a.numericId || 0);
-          const idB = Number(b.numericId || 0);
-          const dateA = a.date ? new Date(a.date).getTime() : 0;
-          const dateB = b.date ? new Date(b.date).getTime() : 0;
-          const primarySort = idA !== 0 || idB !== 0 ? idB - idA : dateB - dateA;
-          return sortOrder === "desc" ? primarySort : -primarySort;
+  return (
+    <div className="mt-8 sm:mt-10 md:mt-12 w-full box-border animate-in fade-in slide-in-from-bottom-4 duration-700">
+      
       {/* Header & Sort Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 px-1 sm:px-2">
         <div>
@@ -113,23 +113,24 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
       {/* Tablet / Desktop Table Container */}
       {/* Keep the grid width fixed and let the table scroll horizontally inside this box. */}
       <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-hidden">
-        <table className="w-full border-collapse text-left">
+        <div className="overflow-x-auto w-full">
+        <table className="w-full min-w-[1500px] table-fixed border-collapse text-left">
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
-                <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Index No</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Student Name</th>
-                <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Grade</th>
-                    <th className="w-[6%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
-                    <th className="w-[11%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Index No</th>
-                    <th className="w-[15%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Student Name</th>
-                    <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Grade</th>
-                    <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Current Year</th>
-                    <th className="w-[15%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Subjects</th>
-                    <th className="w-[13%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Contact</th>
-                    <th className="w-[11%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Email</th>
-                    <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Date Registered</th>
-                    <th className="w-[9%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Action</th>
+                <th className="w-[6%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
+                <th className="w-[11%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Index No</th>
+                <th className="w-[15%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Student Name</th>
+                <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Grade</th>
+                <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Current Year</th>
+                <th className="w-[15%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Subjects</th>
+                <th className="w-[13%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Contact</th>
+                <th className="w-[11%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Email</th>
+                <th className="w-[10%] px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Date Registered</th>
+                <th className="w-[9%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50">
+              {sortedStudents.length === 0 ? (
                 <tr>
                   <td colSpan="10" className="py-20 text-center">
                     <div className="flex flex-col items-center gap-3">
@@ -197,23 +198,23 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                     </td>
 
                     {/* Action Buttons */}
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex flex-col justify-center items-center gap-2">
+                    <td className="px-4 py-4 text-center">
+                      <div className="flex flex-col justify-center items-stretch gap-2 min-w-[120px]">
                         <button
                           onClick={() => onSelect(stu)}
-                          className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full"
+                          className="inline-flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
                           title="Update Student"
                         >
                           <HiOutlinePencilAlt className="text-base" />
-                              className="inline-flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
+                          Update
                         </button>
                         <button
                           onClick={() => onDelete(stu)}
-                          className="inline-flex items-center gap-2 bg-white border border-rose-100 text-rose-500 px-4 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full"
+                          className="inline-flex items-center justify-center gap-2 bg-white border border-rose-100 text-rose-500 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full whitespace-nowrap"
                           title="Delete Student"
                         >
                           <HiOutlineTrash className="text-base" />
-                              className="inline-flex items-center justify-center gap-2 bg-white border border-rose-100 text-rose-500 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full whitespace-nowrap"
+                          Delete
                         </button>
                       </div>
                     </td>
@@ -222,6 +223,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
               )}
             </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
