@@ -128,7 +128,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* Desktop Grid – no overflow scroll, expands full width */}
+      {/* Desktop Grid – no overflow, expands naturally */}
       <div className="hidden md:block w-full">
         <div className="min-w-[1250px] bg-white text-[13px] xl:text-sm">
           {/* Header row */}

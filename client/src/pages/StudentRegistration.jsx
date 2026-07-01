@@ -308,7 +308,7 @@ export default function StudentRegistration() {
 
   return (
     <div
-      className="student-registration-scroll h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900 overflow-x-auto overflow-y-auto"
+      className="student-registration-scroll h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900 overflow-x-scroll overflow-y-auto"
       style={{ scrollbarGutter: "stable both-edges" }}
     >
       <Sidebar />
@@ -319,7 +319,6 @@ export default function StudentRegistration() {
           minWidth: "0",
         }}
       >
-        {/* Removed max-w-7xl to allow horizontal scroll on page */}
         <div className="mx-auto w-full">
           <PageTitle title="Student Registration" className="mb-8" />
         </div>
@@ -353,7 +352,6 @@ export default function StudentRegistration() {
           )}
         </MessageBox>
 
-        {/* Removed max-w-7xl here too */}
         <div className="mx-auto w-full">
           <div className="w-full">
             <StudentForm
