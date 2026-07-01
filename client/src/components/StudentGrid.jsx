@@ -73,7 +73,6 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
               key={stu._id || idx}
               className="bg-white rounded-[1.25rem] border border-slate-100 shadow-sm p-4 sm:p-5 box-border"
             >
-              {/* ... mobile card content (unchanged) ... */}
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-base sm:text-lg font-bold text-slate-800">
@@ -130,10 +129,8 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* ===================== DESKTOP TABLE ===================== */}
-      {/* Outer container: allows horizontal scrolling if the table is too wide */}
+      {/* ========== DESKTOP TABLE – with Action column fully visible ========== */}
       <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-x-auto">
-        {/* Table with a minimum width so all columns are preserved */}
         <table className="w-full min-w-[1200px] border-collapse text-left">
           <thead>
             <tr className="bg-slate-50/50 border-b border-slate-100">
@@ -199,7 +196,6 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                     {stu.currentYear || "-"}
                   </td>
                   <td className="px-6 py-4 text-sm text-slate-600 leading-tight">
-                    {/* Subjects can wrap; no whitespace-nowrap */}
                     {stu.subjects?.map((sub, i) => (
                       <div key={i} className="py-0.5">
                         {typeof sub === "string" ? sub : sub?.name || ""}
@@ -219,7 +215,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                   <td className="px-6 py-4 text-sm text-slate-500 whitespace-nowrap">
                     {stu.date ? new Date(stu.date).toISOString().slice(0, 10) : ""}
                   </td>
-                  {/* Action column – fully visible with min-width */}
+                  {/* Action column with min-width to keep buttons visible */}
                   <td className="px-2 py-4 text-center min-w-[130px]">
                     <div className="flex flex-col justify-center items-center gap-2">
                       <button
