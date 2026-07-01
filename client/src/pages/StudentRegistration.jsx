@@ -123,7 +123,7 @@ export default function StudentRegistration() {
     }
   }, []);
 
-  // 1. Fetch Students (Updated with detailed Server Offline handling)
+  // 1. Fetch Students
   useEffect(() => {
     const controller = new AbortController();
     const fetchStudents = async () => {
@@ -134,8 +134,8 @@ export default function StudentRegistration() {
         if (err.name === 'AbortError' || err.code === 'ERR_CANCELED' || err.message === 'canceled') return;
         setMessageBox({ 
             message: err.message.includes("Unexpected token") 
-                ? "Database Error: Invalid data received. Check backend routes." 
-                : err.message, 
+              ? "Database Error: Invalid data received. Check backend routes." 
+              : err.message, 
             type: "error" 
         });
       } finally {
@@ -167,7 +167,6 @@ export default function StudentRegistration() {
   // 2. Handle Save
   const handleSave = async (student) => {
     const valIndex = student.indexno || student.indexNo || student.index || "";
-    // Normalize contact to digits-only and strip leading zeros to match server normalization
     const valContact = String(student.contact || "").replace(/\D/g, "").replace(/^0+/, "");
     const valEmail = String(student.email || "").trim().toLowerCase();
 
@@ -266,10 +265,8 @@ export default function StudentRegistration() {
   };
 
   const handleSelect = useCallback((student) => {
-    // Ensure 'subjects' property is always an array for StudentForm
     let fixedStudent = { ...student };
     if (!Array.isArray(fixedStudent.subjects)) {
-      // Try to map from 'subject' or fallback to empty array
       if (Array.isArray(fixedStudent.subject)) {
         fixedStudent.subjects = fixedStudent.subject;
       } else {
@@ -284,17 +281,12 @@ export default function StudentRegistration() {
     <div className="student-registration-scroll h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900 overflow-x-auto overflow-y-auto" style={{ scrollbarGutter: "stable both-edges" }}>
       <Sidebar />
       <div
-        className="tutor-page-shell min-h-screen py-5 sm:py-6 md:py-8 lg:py-10 px-3 sm:px-4 md:px-6 lg:px-8"
+        className="tutor-page-shell min-h-screen py-5 sm:py-6 md:py-8 lg:py-10 px-4 sm:px-6 md:px-8"
         style={{
-          marginLeft: "calc(var(--tutor-sidebar-width, 5.5rem) + 0.75rem)",
-          width: "calc(100vw - var(--tutor-sidebar-width, 5.5rem) + 1px)",
-          minWidth: "calc(100vw - var(--tutor-sidebar-width, 5.5rem) + 1px)",
+          marginLeft: "var(--tutor-sidebar-width, 5.5rem)",
+          width: "calc(100vw - var(--tutor-sidebar-width, 5.5rem))",
         }}
       >
-        <div className="mx-auto w-full max-w-7xl">
-          <PageTitle title="Student Registration" className="mb-8" />
-        </div>
-
         <MessageBox
           message={messageBox.message}
           type={messageBox.type}
@@ -324,7 +316,14 @@ export default function StudentRegistration() {
           )}
         </MessageBox>
 
-        <div className="mx-auto w-full max-w-7xl">
+        {/* Unified Content Wrapper */}
+        <div className="mx-auto w-full max-w-7xl flex flex-col gap-6">
+          {/* Aligned Title Section */}
+          <div className="px-1 sm:px-2">
+            <PageTitle title="Student Registration" />
+          </div>
+
+          {/* Form Section */}
           <div className="w-full">
             <StudentForm
               onSave={handleSave}
@@ -335,7 +334,8 @@ export default function StudentRegistration() {
             />
           </div>
 
-          <div className="mt-12 w-full" ref={gridRef}>
+          {/* Grid Section */}
+          <div className="mt-6 w-full" ref={gridRef}>
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 gap-4">
                 <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
@@ -350,6 +350,7 @@ export default function StudentRegistration() {
                 students={students} 
                 onSelect={handleSelect} 
                 onDelete={stu => setPendingDelete(stu)} 
+                // Adding custom snapshot trigger function if needed
               />
             )}
           </div>
