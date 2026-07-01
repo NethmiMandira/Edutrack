@@ -113,8 +113,8 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
       {/* Tablet / Desktop Table Container */}
       {/* Keep the grid width fixed and let the table scroll horizontally inside this box. */}
       <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-hidden">
-        <div className="overflow-x-auto w-full">
-        <table className="w-full min-w-[1280px] table-fixed border-collapse text-left">
+        <div className="overflow-x-scroll w-full">
+        <table className="w-full min-w-[1600px] table-fixed border-collapse text-left">
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
                 <th className="w-[6%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
