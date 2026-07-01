@@ -319,10 +319,8 @@ export default function StudentRegistration() {
           minWidth: "0",
         }}
       >
-        <div className="mx-auto w-full">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-8">
-  Student Registration
-</h1>
+        <div className="mx-auto max-w-7xl">
+          <PageTitle title="Student Registration" className="mb-8" />
         </div>
 
         <MessageBox
