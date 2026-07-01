@@ -319,7 +319,8 @@ export default function StudentRegistration() {
           minWidth: "0",
         }}
       >
-        <div className="mx-auto w-full max-w-7xl">
+        {/* Removed max-w-7xl to allow horizontal scroll on page */}
+        <div className="mx-auto w-full">
           <PageTitle title="Student Registration" className="mb-8" />
         </div>
 
@@ -352,7 +353,8 @@ export default function StudentRegistration() {
           )}
         </MessageBox>
 
-        <div className="mx-auto w-full max-w-7xl">
+        {/* Removed max-w-7xl here too */}
+        <div className="mx-auto w-full">
           <div className="w-full">
             <StudentForm
               onSave={handleSave}
@@ -363,7 +365,6 @@ export default function StudentRegistration() {
             />
           </div>
 
-          {/* Removed overflow-x-scroll – it's now handled inside StudentGrid */}
           <div className="mt-12 w-full" ref={gridRef}>
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 gap-4">
