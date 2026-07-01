@@ -4,36 +4,38 @@
 	--tutor-sidebar-width: 16rem;
 }
 
-.tutor-page-shell {
-	margin-left: 5rem;
-	transition: margin-left 300ms ease;
+/* Reset body margins */
+body {
+	margin: 0;
 }
 
-@media (min-width: 768px) {
-	.tutor-page-shell {
-		margin-left: var(--tutor-sidebar-width, 16rem);
+/* Outer container – forces full viewport width and always shows horizontal scrollbar */
+.student-registration-scroll {
+	width: 100vw;                /* full viewport width */
+	max-width: 100%;             /* prevent overflow beyond viewport */
+	height: 100vh;               /* full viewport height */
+	display: flex;
+	flex-direction: column;      /* stack on mobile */
+	background-color: #f8fafc;
+	overflow-x: scroll !important;   /* always show horizontal scrollbar */
+	overflow-y: auto !important;     /* vertical scroll when needed */
+	scrollbar-gutter: stable both-edges;
+}
+
+@media (min-width: 1024px) {
+	.student-registration-scroll {
+		flex-direction: row;     /* sidebar + content side by side */
 	}
 }
 
-/* Hide scrollbars on html/body only, but keep page scroll ability */
-html, body {
-	overflow-x: hidden;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
-}
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-	display: none;
-	height: 0;
-	width: 0;
-}
-
-/* Sidebar scroll – vertical only, no horizontal */
+/* Sidebar – never horizontal scroll, only vertical */
 .tutor-sidebar-scroll {
 	scrollbar-width: thin;
 	scrollbar-color: rgba(99, 102, 241, 0.65) rgba(30, 41, 59, 0.45);
 	overflow-y: auto !important;
 	overflow-x: hidden !important;
+	flex-shrink: 0;              /* don't shrink */
+	min-width: 0;                /* allow collapse */
 }
 .tutor-sidebar-scroll::-webkit-scrollbar {
 	width: 8px;
@@ -52,14 +54,35 @@ body::-webkit-scrollbar {
 	background: linear-gradient(180deg, rgba(165, 180, 252, 0.98), rgba(99, 102, 241, 0.98));
 }
 
-/* Main student registration container – horizontal scroll always visible */
-.student-registration-scroll {
-	scrollbar-width: auto;
-	scrollbar-color: rgba(168, 85, 247, 0.95) rgba(226, 232, 240, 0.9);
-	overscroll-behavior: contain;
-	overflow-x: scroll !important;   /* force horizontal scrollbar */
-	overflow-y: auto !important;
+/* Content area – uses padding instead of margin to keep scrollbar full-width */
+.tutor-page-shell {
+	flex: 1 1 auto;              /* grow, shrink, auto basis */
+	min-height: 100vh;
+	padding-left: 5rem;          /* offset for collapsed sidebar */
+	transition: padding-left 300ms ease;
+	overflow: visible;           /* allow children to overflow and trigger parent scroll */
 }
+
+@media (min-width: 768px) {
+	.tutor-page-shell {
+		padding-left: var(--tutor-sidebar-width, 16rem);
+	}
+}
+
+/* Hide scrollbars on html/body – let the container handle it */
+html, body {
+	overflow-x: hidden;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none;
+	height: 0;
+	width: 0;
+}
+
+/* Styling for the horizontal scrollbar on the main container */
 .student-registration-scroll::-webkit-scrollbar {
 	display: block !important;
 	width: 14px;
