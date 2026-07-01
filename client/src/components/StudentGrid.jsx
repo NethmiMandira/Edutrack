@@ -8,7 +8,7 @@ import {
 } from "react-icons/hi";
 
 export default function StudentGrid({ students = [], onSelect, onDelete }) {
-  const [sortOrder, setSortOrder] = useState("desc"); // 'desc' for newest first, 'asc' for oldest first
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const sortedStudents = useMemo(() => {
     return [...students].sort((a, b) => {
@@ -91,7 +91,8 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                   <span className="font-semibold text-slate-700">Year:</span> {stu.currentYear || "-"}
                 </p>
                 <p className="sm:col-span-2">
-                  <span className="font-semibold text-slate-700">Contact:</span> {(() => {
+                  <span className="font-semibold text-slate-700">Contact:</span>{" "}
+                  {(() => {
                     let c = stu.contact || "";
                     c = c.replace(/^\+?94/, "").replace(/^0+/, "").replace(/\D/g, "").slice(0, 9);
                     return c.length === 9 ? `+94${c}` : stu.contact || "-";
@@ -138,45 +139,45 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* Tablet / Desktop Grid Layout */}
-      <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-x-auto">
-        <div className="min-w-[1600px]">
-          {/* Header row */}
-          <div className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] bg-slate-50/50 border-b border-slate-100">
-            <div className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
+      {/* Tablet / Desktop Grid Layout – cleaned up to match screenshot */}
+      <div className="hidden md:block w-full overflow-x-scroll">
+        <div className="min-w-[1600px] bg-white">
+          {/* Header row – no background, only bottom border */}
+          <div className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] border-b border-slate-200">
+            <div className="px-4 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
               ID
             </div>
-            <div className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Index No
             </div>
-            <div className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Student Name
             </div>
-            <div className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Grade
             </div>
-            <div className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Current Year
             </div>
-            <div className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Subjects
             </div>
-            <div className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Contact
             </div>
-            <div className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Email
             </div>
-            <div className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Date Registered
             </div>
-            <div className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
+            <div className="px-4 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
               Action
             </div>
           </div>
 
-          {/* Data rows */}
-          <div className="divide-y divide-slate-50">
+          {/* Data rows – only bottom border, no hover background */}
+          <div className="divide-y divide-slate-100">
             {sortedStudents.length === 0 ? (
               <div className="grid grid-cols-1">
                 <div className="py-20 text-center">
@@ -190,7 +191,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
               sortedStudents.map((stu, idx) => (
                 <div
                   key={stu._id || idx}
-                  className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] group hover:bg-slate-50/80 transition-all duration-200 items-center"
+                  className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] items-center"
                 >
                   {/* ID */}
                   <div className="px-4 py-4 text-sm font-bold text-slate-400 text-center">
