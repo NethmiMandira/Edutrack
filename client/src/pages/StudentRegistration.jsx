@@ -319,69 +319,70 @@ export default function StudentRegistration() {
           minWidth: "0",
         }}
       >
-        <div className="mx-auto max-w-7xl">
+        {/* Single centered container for all content – matches Marks Entry pattern */}
+        <div className="max-w-7xl mx-auto w-full">
           <PageTitle title="Student Registration" className="mb-8" />
-        </div>
 
-        <MessageBox
-          message={messageBox.message}
-          type={messageBox.type}
-          onClose={() => {
-            setMessageBox({ message: "", type: "error" });
-            if (messageBox.type === "success") {
-              setClearFormFlag(false);
-              setSelectedStudent(null);
-            }
-          }}
-        />
+          <MessageBox
+            message={messageBox.message}
+            type={messageBox.type}
+            onClose={() => {
+              setMessageBox({ message: "", type: "error" });
+              if (messageBox.type === "success") {
+                setClearFormFlag(false);
+                setSelectedStudent(null);
+              }
+            }}
+          />
 
-        <MessageBox
-          message={pendingDelete ? `Delete ${pendingDelete.firstname}'s record?` : ""}
-          type="warning"
-          onClose={() => setPendingDelete(null)}
-        >
-          {pendingDelete && (
-            <DeleteConfirmButtons
-              onOk={async () => {
-                const stu = pendingDelete;
-                setPendingDelete(null);
-                await handleDelete(stu);
-              }}
-              onCancel={() => setPendingDelete(null)}
-            />
-          )}
-        </MessageBox>
-
-        <div className="mx-auto w-full">
-          <div className="w-full">
-            <StudentForm
-              onSave={handleSave}
-              onUpdate={(val) => (val ? handleUpdate(val) : setSelectedStudent(null))}
-              selectedStudent={selectedStudent}
-              clearFormFlag={clearFormFlag}
-              onClearFormHandled={() => setClearFormFlag(false)}
-            />
-          </div>
-
-          <div className="mt-12 w-full" ref={gridRef}>
-            {loading ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-4">
-                <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-                <p className="text-slate-400 font-bold tracking-widest text-xs uppercase">
-                  Syncing Database...
-                </p>
-              </div>
-            ) : students.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-[3rem] border-4 border-dashed border-slate-100">
-                <p className="text-slate-300 font-medium">No students registered yet.</p>
-              </div>
-            ) : (
-              <StudentGrid
-                students={students}
-                onSelect={handleSelect}
-                onDelete={(stu) => setPendingDelete(stu)}
+          <MessageBox
+            message={pendingDelete ? `Delete ${pendingDelete.firstname}'s record?` : ""}
+            type="warning"
+            onClose={() => setPendingDelete(null)}
+          >
+            {pendingDelete && (
+              <DeleteConfirmButtons
+                onOk={async () => {
+                  const stu = pendingDelete;
+                  setPendingDelete(null);
+                  await handleDelete(stu);
+                }}
+                onCancel={() => setPendingDelete(null)}
               />
             )}
+          </MessageBox>
+
+          <div className="mt-8 space-y-8">
+            <div className="w-full">
+              <StudentForm
+                onSave={handleSave}
+                onUpdate={(val) => (val ? handleUpdate(val) : setSelectedStudent(null))}
+                selectedStudent={selectedStudent}
+                clearFormFlag={clearFormFlag}
+                onClearFormHandled={() => setClearFormFlag(false)}
+              />
+            </div>
+
+            <div className="mt-12 w-full" ref={gridRef}>
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-20 gap-4">
+                  <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                  <p className="text-slate-400 font-bold tracking-widest text-xs uppercase">
+                    Syncing Database...
+                  </p>
+                </div>
+              ) : students.length === 0 ? (
+                <div className="text-center py-20 bg-white rounded-[3rem] border-4 border-dashed border-slate-100">
+                  <p className="text-slate-300 font-medium">No students registered yet.</p>
+                </div>
+              ) : (
+                <StudentGrid
+                  students={students}
+                  onSelect={handleSelect}
+                  onDelete={(stu) => setPendingDelete(stu)}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
