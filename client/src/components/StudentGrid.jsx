@@ -139,44 +139,44 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* Tablet / Desktop Grid Layout – with reduced column gaps */}
-      <div className="hidden md:block w-full overflow-x-scroll student-grid-scroll">
-        <div className="min-w-[1600px] bg-white">
-          {/* Header row – reduced padding */}
-          <div className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] border-b border-slate-200">
-            <div className="px-2 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
+      {/* Tablet / Desktop Grid Layout – fits on one screen, no horizontal scroll */}
+      <div className="hidden md:block w-full">
+        <div className="w-full bg-white text-[13px] xl:text-sm">
+          {/* Header row */}
+          <div className="grid grid-cols-[5%_9%_14%_8%_8%_16%_12%_16%_8%_4%] border-b border-slate-200">
+            <div className="px-1.5 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide text-center">
               ID
             </div>
-            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-2 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide">
               Index No
             </div>
-            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
-              Student Name
+            <div className="px-2 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide">
+              Name
             </div>
-            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-2 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide">
               Grade
             </div>
-            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
-              Current Year
+            <div className="px-2 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide">
+              Year
             </div>
-            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-2 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide">
               Subjects
             </div>
-            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-2 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide">
               Contact
             </div>
-            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-2 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide">
               Email
             </div>
-            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
-              Date Registered
+            <div className="px-2 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide">
+              Registered
             </div>
-            <div className="px-2 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
+            <div className="px-1 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide text-center">
               Action
             </div>
           </div>
 
-          {/* Data rows – reduced padding */}
+          {/* Data rows */}
           <div className="divide-y divide-slate-100">
             {sortedStudents.length === 0 ? (
               <div className="grid grid-cols-1">
@@ -191,56 +191,65 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
               sortedStudents.map((stu, idx) => (
                 <div
                   key={stu._id || idx}
-                  className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] items-center"
+                  className="grid grid-cols-[5%_9%_14%_8%_8%_16%_12%_16%_8%_4%] items-center"
                 >
-                  <div className="px-2 py-4 text-sm font-bold text-slate-400 text-center">
+                  {/* ID */}
+                  <div className="px-1.5 py-2.5 font-bold text-slate-400 text-center truncate">
                     {stu.numericId || "—"}
                   </div>
-                  <div className="px-3 py-4 text-sm font-medium text-slate-500">
+                  {/* Index No */}
+                  <div className="px-2 py-2.5 font-medium text-slate-500 truncate">
                     {stu.indexno || "-"}
                   </div>
-                  <div className="px-3 py-4 text-sm font-bold text-slate-800">
+                  {/* Name */}
+                  <div className="px-2 py-2.5 font-bold text-slate-800 truncate">
                     {stu.firstname} {stu.lastname}
                   </div>
-                  <div className="px-3 py-4 text-sm text-slate-600">{stu.grade || "-"}</div>
-                  <div className="px-3 py-4 text-sm text-slate-600">
+                  {/* Grade */}
+                  <div className="px-2 py-2.5 text-slate-600 truncate">{stu.grade || "-"}</div>
+                  {/* Current Year */}
+                  <div className="px-2 py-2.5 text-slate-600 truncate">
                     {stu.currentYear || "-"}
                   </div>
-                  <div className="px-3 py-4 text-sm text-slate-600 leading-tight">
-                    {stu.subjects?.map((sub, i) => (
-                      <div key={i} className="py-0.5">
-                        {typeof sub === "string" ? sub : sub?.name || ""}
-                      </div>
-                    ))}
+                  {/* Subjects (comma list, wraps instead of forcing width) */}
+                  <div className="px-2 py-2.5 text-slate-600 leading-tight break-words">
+                    {Array.isArray(stu.subjects) && stu.subjects.length > 0
+                      ? stu.subjects
+                          .map((sub) => (typeof sub === "string" ? sub : sub?.name || ""))
+                          .filter(Boolean)
+                          .join(", ")
+                      : "-"}
                   </div>
-                  <div className="px-3 py-4 text-sm text-slate-600 font-medium">
+                  {/* Contact (formatted with +94) */}
+                  <div className="px-2 py-2.5 text-slate-600 font-medium truncate">
                     {(() => {
                       let c = stu.contact || "";
                       c = c.replace(/^\+?94/, "").replace(/^0+/, "").replace(/\D/g, "").slice(0, 9);
                       return c.length === 9 ? `+94${c}` : stu.contact || "-";
                     })()}
                   </div>
-                  <div className="px-3 py-4 text-sm text-slate-600">{stu.email || "-"}</div>
-                  <div className="px-3 py-4 text-sm text-slate-500">
+                  {/* Email */}
+                  <div className="px-2 py-2.5 text-slate-600 truncate">{stu.email || "-"}</div>
+                  {/* Date Registered */}
+                  <div className="px-2 py-2.5 text-slate-500 truncate">
                     {stu.date ? new Date(stu.date).toISOString().slice(0, 10) : ""}
                   </div>
-                  <div className="px-2 py-4 text-center">
-                    <div className="flex flex-col justify-center items-stretch gap-2 min-w-[100px]">
+                  {/* Action buttons */}
+                  <div className="px-1 py-2.5 text-center">
+                    <div className="flex flex-col justify-center items-stretch gap-1">
                       <button
                         onClick={() => onSelect(stu)}
-                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-slate-200 text-slate-700 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
+                        className="inline-flex items-center justify-center gap-1 bg-white border border-slate-200 text-slate-700 px-1.5 py-1.5 rounded-lg text-[10px] font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full"
                         title="Update Student"
                       >
-                        <HiOutlinePencilAlt className="text-base" />
-                        Update
+                        <HiOutlinePencilAlt className="text-sm" />
                       </button>
                       <button
                         onClick={() => onDelete(stu)}
-                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-rose-100 text-rose-500 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full whitespace-nowrap"
+                        className="inline-flex items-center justify-center gap-1 bg-white border border-rose-100 text-rose-500 px-1.5 py-1.5 rounded-lg text-[10px] font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full"
                         title="Delete Student"
                       >
-                        <HiOutlineTrash className="text-base" />
-                        Delete
+                        <HiOutlineTrash className="text-sm" />
                       </button>
                     </div>
                   </div>
