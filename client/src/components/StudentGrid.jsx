@@ -114,7 +114,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
       {/* Keep the grid width fixed and let the table scroll horizontally inside this box. */}
       <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-hidden">
         <div className="overflow-x-auto w-full">
-        <table className="w-full min-w-[1500px] table-fixed border-collapse text-left">
+        <table className="w-full min-w-[1280px] table-fixed border-collapse text-left">
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
                 <th className="w-[6%] px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
@@ -199,7 +199,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
 
                     {/* Action Buttons */}
                     <td className="px-4 py-4 text-center">
-                      <div className="flex flex-col justify-center items-stretch gap-2 min-w-[120px]">
+                      <div className="flex flex-col justify-center items-stretch gap-2 min-w-[130px]">
                         <button
                           onClick={() => onSelect(stu)}
                           className="inline-flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
