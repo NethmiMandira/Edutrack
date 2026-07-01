@@ -4,21 +4,16 @@
 	--tutor-sidebar-width: 16rem;
 }
 
-/* Reset body margins */
-body {
-	margin: 0;
-}
-
-/* Outer container – forces full viewport width and always shows horizontal scrollbar */
+/* Outer container – full viewport, flex row on large screens */
 .student-registration-scroll {
-	width: 100vw;                /* full viewport width */
-	max-width: 100%;             /* prevent overflow beyond viewport */
-	height: 100vh;               /* full viewport height */
+	width: 100vw;
+	max-width: 100%;
+	height: 100vh;
 	display: flex;
-	flex-direction: column;      /* stack on mobile */
+	flex-direction: column;      /* mobile: stacked */
 	background-color: #f8fafc;
 	overflow-x: scroll !important;   /* always show horizontal scrollbar */
-	overflow-y: auto !important;     /* vertical scroll when needed */
+	overflow-y: auto !important;
 	scrollbar-gutter: stable both-edges;
 }
 
@@ -34,7 +29,7 @@ body {
 	scrollbar-color: rgba(99, 102, 241, 0.65) rgba(30, 41, 59, 0.45);
 	overflow-y: auto !important;
 	overflow-x: hidden !important;
-	flex-shrink: 0;              /* don't shrink */
+	flex-shrink: 0;              /* prevent shrinking */
 	min-width: 0;                /* allow collapse */
 }
 .tutor-sidebar-scroll::-webkit-scrollbar {
@@ -54,19 +49,37 @@ body {
 	background: linear-gradient(180deg, rgba(165, 180, 252, 0.98), rgba(99, 102, 241, 0.98));
 }
 
-/* Content area – uses padding instead of margin to keep scrollbar full-width */
+/* Content area – flex to center its child, uses padding for vertical spacing */
 .tutor-page-shell {
-	flex: 1 1 auto;              /* grow, shrink, auto basis */
+	flex: 1 1 auto;
+	display: flex;
+	justify-content: center;     /* horizontally center child */
 	min-height: 100vh;
-	padding-left: 5rem;          /* offset for collapsed sidebar */
-	transition: padding-left 300ms ease;
-	overflow: visible;           /* allow children to overflow and trigger parent scroll */
+	padding: 1.25rem 0.75rem;    /* vertical padding, horizontal minimal */
+	overflow: visible;           /* child overflows to trigger parent scroll */
 }
 
+@media (min-width: 640px) {
+	.tutor-page-shell {
+		padding: 1.5rem 1rem;
+	}
+}
 @media (min-width: 768px) {
 	.tutor-page-shell {
-		padding-left: var(--tutor-sidebar-width, 16rem);
+		padding: 2rem 1.5rem;
 	}
+}
+@media (min-width: 1024px) {
+	.tutor-page-shell {
+		padding: 2.5rem 2rem;
+	}
+}
+
+/* The container that holds all content – centered and max‑width */
+.tutor-page-content {
+	width: 100%;
+	max-width: 1280px;   /* equivalent to max-w-7xl */
+	margin: 0 auto;      /* ensure centering within flex parent */
 }
 
 /* Hide scrollbars on html/body – let the container handle it */

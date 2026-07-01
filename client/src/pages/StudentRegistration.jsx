@@ -313,14 +313,10 @@ export default function StudentRegistration() {
     >
       <Sidebar />
       <div
-        className="tutor-page-shell flex-1 min-h-screen py-5 sm:py-6 md:py-8 lg:py-10 px-3 sm:px-4 md:px-6 lg:px-8"
-        style={{
-          paddingLeft: "calc(var(--tutor-sidebar-width, 5.5rem) + 0.75rem)",
-          minWidth: "0",
-        }}
+        className="tutor-page-shell"
+        // No inline paddingLeft or minWidth – CSS handles centering
       >
-        {/* Single centered container for all content – matches Marks Entry pattern */}
-        <div className="max-w-7xl mx-auto w-full">
+        <div className="tutor-page-content">
           <PageTitle title="Student Registration" className="mb-8" />
 
           <MessageBox
