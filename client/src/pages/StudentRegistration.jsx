@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import {
-  HiOutlineExclamation,
-  HiOutlineCheckCircle,
+import { 
+  HiOutlineExclamation, 
+  HiOutlineCheckCircle, 
   HiOutlineTrash,
-  HiOutlineCamera,
+  HiOutlineCamera // Added for Snipping Tool
 } from "react-icons/hi";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas"; // Import for Snipping Tool
 
 import Sidebar from "../components/Navbar";
 import PageTitle from "../components/PageTitle";
@@ -30,23 +30,19 @@ function MessageBox({ message, onClose, type = "error", children }) {
   const styles = {
     success: { color: "text-emerald-600", border: "border-emerald-200", label: "Success" },
     warning: { color: "text-amber-600", border: "border-amber-200", label: "Confirm Action" },
-    error: { color: "text-rose-600", border: "border-rose-200", label: "System Error" },
+    error: { color: "text-rose-600", border: "border-rose-200", label: "System Error" }
   };
 
   const { color, border, label } = styles[type] || styles.error;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[100] bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
-      <div
-        className={`bg-white rounded-[2rem] shadow-2xl border-2 p-5 sm:p-8 min-w-[280px] sm:min-w-[340px] max-w-[92vw] flex flex-col items-center gap-4 ${border} animate-in zoom-in-95 duration-300`}
-      >
+      <div className={`bg-white rounded-[2rem] shadow-2xl border-2 p-5 sm:p-8 min-w-[280px] sm:min-w-[340px] max-w-[92vw] flex flex-col items-center gap-4 ${border} animate-in zoom-in-95 duration-300`}>
         <div className={`text-sm uppercase tracking-[0.2em] font-black ${color}`}>{label}</div>
         <div className="text-slate-600 text-center font-medium leading-relaxed whitespace-pre-line px-4">
           {message}
         </div>
-        {children ? (
-          children
-        ) : (
+        {children ? children : (
           <button
             onClick={onClose}
             className="mt-4 px-12 py-3 rounded-2xl bg-slate-900 text-white font-bold hover:bg-indigo-600 transition-all shadow-lg active:scale-95"
@@ -114,7 +110,8 @@ export default function StudentRegistration() {
   const [messageBox, setMessageBox] = useState({ message: "", type: "error" });
   const [pendingDelete, setPendingDelete] = useState(null);
   const [clearFormFlag, setClearFormFlag] = useState(false);
-
+  
+  // Ref to target the grid for snipping
   const gridRef = useRef(null);
 
   const loadStudents = useCallback(async (signal) => {
@@ -126,6 +123,7 @@ export default function StudentRegistration() {
     }
   }, []);
 
+  // 1. Fetch Students (Updated with detailed Server Offline handling)
   useEffect(() => {
     const controller = new AbortController();
     const fetchStudents = async () => {
@@ -133,12 +131,12 @@ export default function StudentRegistration() {
       try {
         await loadStudents(controller.signal);
       } catch (err) {
-        if (err.name === "AbortError" || err.code === "ERR_CANCELED" || err.message === "canceled") return;
-        setMessageBox({
-          message: err.message.includes("Unexpected token")
-            ? "Database Error: Invalid data received. Check backend routes."
-            : err.message,
-          type: "error",
+        if (err.name === 'AbortError' || err.code === 'ERR_CANCELED' || err.message === 'canceled') return;
+        setMessageBox({ 
+            message: err.message.includes("Unexpected token") 
+                ? "Database Error: Invalid data received. Check backend routes." 
+                : err.message, 
+            type: "error" 
         });
       } finally {
         setLoading(false);
@@ -146,14 +144,15 @@ export default function StudentRegistration() {
     };
     fetchStudents();
     return () => controller.abort();
-  }, [loadStudents]);
+  }, []);
 
+  // Snipping Tool Function
   const handleCapture = async () => {
     if (!gridRef.current) return;
     try {
       const canvas = await html2canvas(gridRef.current, {
-        backgroundColor: "#f8fafc",
-        scale: 2,
+        backgroundColor: "#f8fafc", // slate-50
+        scale: 2, // High resolution
         useCORS: true,
       });
       const link = document.createElement("a");
@@ -165,26 +164,18 @@ export default function StudentRegistration() {
     }
   };
 
+  // 2. Handle Save
   const handleSave = async (student) => {
     const valIndex = student.indexno || student.indexNo || student.index || "";
+    // Normalize contact to digits-only and strip leading zeros to match server normalization
     const valContact = String(student.contact || "").replace(/\D/g, "").replace(/^0+/, "");
     const valEmail = String(student.email || "").trim().toLowerCase();
 
-    if (
-      students.some(
-        (s) =>
-          (s.indexno === valIndex || s.indexNo === valIndex || s.index === valIndex) &&
-          valIndex !== ""
-      )
-    ) {
+    if (students.some(s => (s.indexno === valIndex || s.indexNo === valIndex || s.index === valIndex) && valIndex !== "")) {
       setMessageBox({ message: `The Index Number "${valIndex}" is already registered.`, type: "error" });
       return;
     }
-    if (
-      students.some(
-        (s) => String(s.email || "").trim().toLowerCase() === valEmail && valEmail !== ""
-      )
-    ) {
+    if (students.some(s => String(s.email || "").trim().toLowerCase() === valEmail && valEmail !== "")) {
       setMessageBox({ message: `The Email "${student.email}" is already registered.`, type: "error" });
       return;
     }
@@ -197,27 +188,26 @@ export default function StudentRegistration() {
       const notificationWarnings = Array.isArray(data?.notificationWarnings)
         ? data.notificationWarnings.filter(Boolean)
         : [];
-      const smsStatusLine =
-        data?.smsStatus === "disabled"
-          ? "SMS status: disabled in server config."
-          : data?.smsStatus === "queued"
-          ? "SMS status: queued for delivery to " + (data?.contact ? `${data.contact}` : "student.")
-          : data?.smsStatus === "skipped"
-          ? `SMS status: skipped - ${data?.smsError || "no valid phone number."}`
-          : data?.smsStatus === "sent"
-          ? "SMS status: sent to provider."
-          : data?.smsStatus === "failed"
-          ? `SMS status: failed - ${data?.smsError || "delivery failed."}`
-          : data?.smsStatus === "pending"
-          ? "SMS status: pending delivery confirmation."
-          : "SMS status: unavailable.";
+      const smsStatusLine = data?.smsStatus === 'disabled'
+        ? 'SMS status: disabled in server config.'
+        : data?.smsStatus === 'queued'
+          ? 'SMS status: queued for delivery to ' + (data?.contact ? `${data.contact}` : 'student.')
+          : data?.smsStatus === 'skipped'
+            ? `SMS status: skipped - ${data?.smsError || 'no valid phone number.'}`
+            : data?.smsStatus === 'sent'
+              ? 'SMS status: sent to provider.'
+              : data?.smsStatus === 'failed'
+                ? `SMS status: failed - ${data?.smsError || 'delivery failed.'}`
+                : data?.smsStatus === 'pending'
+                  ? 'SMS status: pending delivery confirmation.'
+                  : 'SMS status: unavailable.';
 
       const successMessage = [
-        "Student record created successfully!",
-        "",
+        'Student record created successfully!',
+        '',
         smsStatusLine,
-        ...(notificationWarnings.length > 0 ? ["", "Notes:", ...notificationWarnings] : []),
-      ].join("\n");
+        ...(notificationWarnings.length > 0 ? ['', 'Notes:', ...notificationWarnings] : []),
+      ].join('\n');
       setMessageBox({ message: successMessage, type: "success" });
       setClearFormFlag(true);
 
@@ -231,6 +221,7 @@ export default function StudentRegistration() {
     }
   };
 
+  // 3. Handle Update
   const handleUpdate = async (student) => {
     if (!student?._id) return;
 
@@ -238,32 +229,12 @@ export default function StudentRegistration() {
     const currentFormContact = student.contact || "";
     const currentFormEmail = String(student.email || "").trim().toLowerCase();
 
-    if (
-      students.some(
-        (s) =>
-          s._id !== student._id &&
-          (s.indexno === currentFormIndex || s.indexNo === currentFormIndex || s.index === currentFormIndex) &&
-          currentFormIndex !== ""
-      )
-    ) {
-      setMessageBox({
-        message: `Update Failed: Index Number "${currentFormIndex}" belongs to another student.`,
-        type: "error",
-      });
+    if (students.some(s => s._id !== student._id && (s.indexno === currentFormIndex || s.indexNo === currentFormIndex || s.index === currentFormIndex) && currentFormIndex !== "")) {
+      setMessageBox({ message: `Update Failed: Index Number "${currentFormIndex}" belongs to another student.`, type: "error" });
       return;
     }
-    if (
-      students.some(
-        (s) =>
-          s._id !== student._id &&
-          String(s.email || "").trim().toLowerCase() === currentFormEmail &&
-          currentFormEmail !== ""
-      )
-    ) {
-      setMessageBox({
-        message: `Update Failed: Email "${student.email}" belongs to another student.`,
-        type: "error",
-      });
+    if (students.some(s => s._id !== student._id && String(s.email || "").trim().toLowerCase() === currentFormEmail && currentFormEmail !== "")) {
+      setMessageBox({ message: `Update Failed: Email "${student.email}" belongs to another student.`, type: "error" });
       return;
     }
 
@@ -280,6 +251,7 @@ export default function StudentRegistration() {
     }
   };
 
+  // 4. Handle Delete
   const handleDelete = async (student) => {
     try {
       if (!student?._id) throw new Error("Missing student ID.");
@@ -294,8 +266,10 @@ export default function StudentRegistration() {
   };
 
   const handleSelect = useCallback((student) => {
+    // Ensure 'subjects' property is always an array for StudentForm
     let fixedStudent = { ...student };
     if (!Array.isArray(fixedStudent.subjects)) {
+      // Try to map from 'subject' or fallback to empty array
       if (Array.isArray(fixedStudent.subject)) {
         fixedStudent.subjects = fixedStudent.subject;
       } else {
@@ -307,78 +281,77 @@ export default function StudentRegistration() {
   }, []);
 
   return (
-    <div
-      className="student-registration-scroll bg-slate-50 font-sans text-slate-900"
-      style={{ scrollbarGutter: "stable both-edges" }}
-    >
+    <div className="student-registration-scroll h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900 overflow-x-auto overflow-y-auto" style={{ scrollbarGutter: "stable both-edges" }}>
       <Sidebar />
       <div
-        className="tutor-page-shell"
-        // No inline paddingLeft or minWidth – CSS handles centering
+        className="tutor-page-shell min-h-screen py-5 sm:py-6 md:py-8 lg:py-10 px-3 sm:px-4 md:px-6 lg:px-8"
+        style={{
+          marginLeft: "calc(var(--tutor-sidebar-width, 5.5rem) + 0.75rem)",
+          width: "calc(100vw - var(--tutor-sidebar-width, 5.5rem) + 1px)",
+          minWidth: "calc(100vw - var(--tutor-sidebar-width, 5.5rem) + 1px)",
+        }}
       >
-        <div className="tutor-page-content">
+        <div className="mx-auto w-full max-w-7xl">
           <PageTitle title="Student Registration" className="mb-8" />
+        </div>
 
-          <MessageBox
-            message={messageBox.message}
-            type={messageBox.type}
-            onClose={() => {
-              setMessageBox({ message: "", type: "error" });
-              if (messageBox.type === "success") {
-                setClearFormFlag(false);
-                setSelectedStudent(null);
-              }
-            }}
-          />
+        <MessageBox
+          message={messageBox.message}
+          type={messageBox.type}
+          onClose={() => {
+            setMessageBox({ message: "", type: "error" });
+            if (messageBox.type === "success") {
+              setClearFormFlag(false);
+              setSelectedStudent(null);
+            }
+          }}
+        />
 
-          <MessageBox
-            message={pendingDelete ? `Delete ${pendingDelete.firstname}'s record?` : ""}
-            type="warning"
-            onClose={() => setPendingDelete(null)}
-          >
-            {pendingDelete && (
-              <DeleteConfirmButtons
-                onOk={async () => {
-                  const stu = pendingDelete;
-                  setPendingDelete(null);
-                  await handleDelete(stu);
-                }}
-                onCancel={() => setPendingDelete(null)}
+        <MessageBox
+          message={pendingDelete ? `Delete ${pendingDelete.firstname}'s record?` : ""}
+          type="warning"
+          onClose={() => setPendingDelete(null)}
+        >
+          {pendingDelete && (
+            <DeleteConfirmButtons
+              onOk={async () => {
+                const stu = pendingDelete;
+                setPendingDelete(null);
+                await handleDelete(stu);
+              }}
+              onCancel={() => setPendingDelete(null)}
+            />
+          )}
+        </MessageBox>
+
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="w-full">
+            <StudentForm
+              onSave={handleSave}
+              onUpdate={val => val ? handleUpdate(val) : setSelectedStudent(null)}
+              selectedStudent={selectedStudent}
+              clearFormFlag={clearFormFlag}
+              onClearFormHandled={() => setClearFormFlag(false)}
+            />
+          </div>
+
+          <div className="mt-12 w-full" ref={gridRef}>
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-20 gap-4">
+                <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                <p className="text-slate-400 font-bold tracking-widest text-xs uppercase">Syncing Database...</p>
+              </div>
+            ) : students.length === 0 ? (
+              <div className="text-center py-20 bg-white rounded-[3rem] border-4 border-dashed border-slate-100">
+                <p className="text-slate-300 font-medium">No students registered yet.</p>
+              </div>
+            ) : (
+              <StudentGrid 
+                students={students} 
+                onSelect={handleSelect} 
+                onDelete={stu => setPendingDelete(stu)} 
               />
             )}
-          </MessageBox>
-
-          <div className="mt-8 space-y-8">
-            <div className="w-full">
-              <StudentForm
-                onSave={handleSave}
-                onUpdate={(val) => (val ? handleUpdate(val) : setSelectedStudent(null))}
-                selectedStudent={selectedStudent}
-                clearFormFlag={clearFormFlag}
-                onClearFormHandled={() => setClearFormFlag(false)}
-              />
-            </div>
-
-            <div className="mt-12 w-full" ref={gridRef}>
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 gap-4">
-                  <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-                  <p className="text-slate-400 font-bold tracking-widest text-xs uppercase">
-                    Syncing Database...
-                  </p>
-                </div>
-              ) : students.length === 0 ? (
-                <div className="text-center py-20 bg-white rounded-[3rem] border-4 border-dashed border-slate-100">
-                  <p className="text-slate-300 font-medium">No students registered yet.</p>
-                </div>
-              ) : (
-                <StudentGrid
-                  students={students}
-                  onSelect={handleSelect}
-                  onDelete={(stu) => setPendingDelete(stu)}
-                />
-              )}
-            </div>
           </div>
         </div>
       </div>
