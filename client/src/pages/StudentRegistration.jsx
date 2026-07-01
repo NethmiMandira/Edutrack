@@ -281,14 +281,13 @@ export default function StudentRegistration() {
   }, []);
 
   return (
-    <div className="student-registration-scroll h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900 overflow-x-auto overflow-y-auto" style={{ scrollbarGutter: "stable both-edges" }}>
+    <div className="student-registration-scroll h-screen bg-slate-50 flex flex-col lg:flex-row font-sans text-slate-900 overflow-x-hidden overflow-y-auto" style={{ scrollbarGutter: "stable both-edges" }}>
       <Sidebar />
       <div
-        className="tutor-page-shell min-h-screen py-5 sm:py-6 md:py-8 lg:py-10 px-3 sm:px-4 md:px-6 lg:px-8"
+        className="tutor-page-shell flex-1 min-h-screen py-5 sm:py-6 md:py-8 lg:py-10 px-3 sm:px-4 md:px-6 lg:px-8"
         style={{
           marginLeft: "calc(var(--tutor-sidebar-width, 5.5rem) + 0.75rem)",
-          width: "calc(100vw - var(--tutor-sidebar-width, 5.5rem) + 1px)",
-          minWidth: "calc(100vw - var(--tutor-sidebar-width, 5.5rem) + 1px)",
+          minWidth: "0",
         }}
       >
         <div className="mx-auto w-full max-w-7xl">
