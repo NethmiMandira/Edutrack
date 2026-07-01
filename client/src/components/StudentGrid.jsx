@@ -58,7 +58,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         </div>
       </div>
 
-      {/* Mobile Cards – unchanged */}
+      {/* Mobile Cards */}
       <div className="md:hidden space-y-3 box-border">
         {sortedStudents.length === 0 ? (
           <div className="bg-white rounded-[1.5rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-10 box-border">
@@ -129,41 +129,40 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* ========== DESKTOP TABLE – with Action column fully visible ========== */}
+      {/* ========== DESKTOP TABLE ========== */}
       <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-x-auto">
-        <table className="w-full min-w-[1200px] border-collapse text-left">
+        <table className="w-full border-collapse text-left table-auto">
           <thead>
             <tr className="bg-slate-50/50 border-b border-slate-100">
-              <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+              <th className="pl-4 pr-2 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap text-center">
                 ID
               </th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+              <th className="px-3 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
                 Index No
               </th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+              <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
                 Student Name
               </th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+              <th className="px-3 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
                 Grade
               </th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
-                Current Year
+              <th className="px-3 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Year
               </th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+              <th className="px-3 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
                 Subjects
               </th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+              <th className="px-3 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
                 Contact
               </th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+              <th className="px-3 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
                 Email
               </th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
-                Date Registered
+              <th className="px-3 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Registered
               </th>
-              {/* Action column – guaranteed minimum width */}
-              <th className="px-2 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center min-w-[130px] whitespace-nowrap">
-                Action
+              <th className="pr-4 pl-2 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center whitespace-nowrap">
+                Actions
               </th>
             </tr>
           </thead>
@@ -180,55 +179,62 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
             ) : (
               sortedStudents.map((stu, idx) => (
                 <tr key={stu._id || idx} className="group hover:bg-slate-50/80 transition-all duration-200">
-                  <td className="px-4 py-4 text-sm font-bold text-slate-400 text-center whitespace-nowrap">
+                  <td className="pl-4 pr-2 py-4 text-sm font-bold text-slate-400 text-center whitespace-nowrap">
                     {stu.numericId || "—"}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-slate-500 whitespace-nowrap">
-                    {stu.indexno}
+                  <td className="px-3 py-4 text-sm font-medium text-slate-500 whitespace-nowrap">
+                    {stu.indexno || "—"}
                   </td>
-                  <td className="px-6 py-4 text-sm font-bold text-slate-800 whitespace-nowrap">
+                  <td className="px-4 py-4 text-sm font-bold text-slate-800 whitespace-nowrap">
                     {stu.firstname} {stu.lastname}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
-                    {stu.grade}
+                  <td className="px-3 py-4 text-sm text-slate-600 whitespace-nowrap">
+                    {stu.grade || "—"}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                  <td className="px-3 py-4 text-sm text-slate-600 whitespace-nowrap">
                     {stu.currentYear || "-"}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600 leading-tight">
-                    {stu.subjects?.map((sub, i) => (
-                      <div key={i} className="py-0.5">
-                        {typeof sub === "string" ? sub : sub?.name || ""}
-                      </div>
-                    ))}
+                  <td className="px-3 py-4 text-sm text-slate-600 leading-tight break-words max-w-[180px]">
+                    {stu.subjects && stu.subjects.length > 0 ? (
+                      stu.subjects.map((sub, i) => (
+                        <div key={i} className="py-0.5 inline-block mr-1 bg-slate-100 px-1.5 py-0.5 rounded text-[11px] font-medium text-slate-600">
+                          {typeof sub === "string" ? sub : sub?.name || ""}
+                        </div>
+                      ))
+                    ) : (
+                      "—"
+                    )}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600 font-medium whitespace-nowrap">
+                  <td className="px-3 py-4 text-sm text-slate-600 font-medium whitespace-nowrap">
                     {(() => {
                       let c = stu.contact || "";
                       c = c.replace(/^\+?94/, "").replace(/^0+/, "").replace(/\D/g, "").slice(0, 9);
-                      return c.length === 9 ? `+94${c}` : stu.contact;
+                      return c.length === 9 ? `+94${c}` : stu.contact || "—";
                     })()}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                  <td className="px-3 py-4 text-sm text-slate-600 break-all max-w-[160px]">
                     {stu.email || "-"}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-500 whitespace-nowrap">
-                    {stu.date ? new Date(stu.date).toISOString().slice(0, 10) : ""}
+                  <td className="px-3 py-4 text-sm text-slate-500 whitespace-nowrap">
+                    {stu.date ? new Date(stu.date).toISOString().slice(0, 10) : "—"}
                   </td>
-                  {/* Action column with min-width to keep buttons visible */}
-                  <td className="px-2 py-4 text-center min-w-[130px]">
-                    <div className="flex flex-col justify-center items-center gap-2">
+                  <td className="pr-4 pl-2 py-4 text-center">
+                    <div className="flex items-center justify-center gap-1.5">
                       <button
                         onClick={() => onSelect(stu)}
-                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
+                        className="inline-flex items-center justify-center gap-1 bg-white border border-slate-200 text-slate-700 px-2 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 whitespace-nowrap"
+                        title="Update"
                       >
-                        <HiOutlinePencilAlt className="text-sm" /> Update
+                        <HiOutlinePencilAlt className="text-sm" />
+                        <span>Update</span>
                       </button>
                       <button
                         onClick={() => onDelete(stu)}
-                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-rose-100 text-rose-500 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full whitespace-nowrap"
+                        className="inline-flex items-center justify-center gap-1 bg-white border border-rose-100 text-rose-500 px-2 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 whitespace-nowrap"
+                        title="Delete"
                       >
-                        <HiOutlineTrash className="text-sm" /> Delete
+                        <HiOutlineTrash className="text-sm" />
+                        <span>Delete</span>
                       </button>
                     </div>
                   </td>
