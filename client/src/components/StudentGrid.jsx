@@ -139,8 +139,8 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* Tablet / Desktop Grid Layout – cleaned up to match screenshot */}
-      <div className="hidden md:block w-full overflow-x-scroll">
+      {/* Tablet / Desktop Grid Layout – with student-grid-scroll class */}
+      <div className="hidden md:block w-full overflow-x-scroll student-grid-scroll">
         <div className="min-w-[1600px] bg-white">
           {/* Header row – no background, only bottom border */}
           <div className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] border-b border-slate-200">
