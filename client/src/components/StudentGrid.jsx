@@ -139,44 +139,44 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* Tablet / Desktop Grid Layout – with student-grid-scroll class */}
+      {/* Tablet / Desktop Grid Layout – with reduced column gaps */}
       <div className="hidden md:block w-full overflow-x-scroll student-grid-scroll">
         <div className="min-w-[1600px] bg-white">
-          {/* Header row – no background, only bottom border */}
+          {/* Header row – reduced padding */}
           <div className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] border-b border-slate-200">
-            <div className="px-4 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
+            <div className="px-2 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
               ID
             </div>
-            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Index No
             </div>
-            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Student Name
             </div>
-            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Grade
             </div>
-            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Current Year
             </div>
-            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Subjects
             </div>
-            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Contact
             </div>
-            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Email
             </div>
-            <div className="px-6 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
+            <div className="px-3 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest">
               Date Registered
             </div>
-            <div className="px-4 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
+            <div className="px-2 py-4 font-bold text-slate-600 text-xs uppercase tracking-widest text-center">
               Action
             </div>
           </div>
 
-          {/* Data rows – only bottom border, no hover background */}
+          {/* Data rows – reduced padding */}
           <div className="divide-y divide-slate-100">
             {sortedStudents.length === 0 ? (
               <div className="grid grid-cols-1">
@@ -193,52 +193,42 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                   key={stu._id || idx}
                   className="grid grid-cols-[6%_11%_15%_10%_10%_15%_13%_11%_10%_9%] items-center"
                 >
-                  {/* ID */}
-                  <div className="px-4 py-4 text-sm font-bold text-slate-400 text-center">
+                  <div className="px-2 py-4 text-sm font-bold text-slate-400 text-center">
                     {stu.numericId || "—"}
                   </div>
-                  {/* Index No */}
-                  <div className="px-6 py-4 text-sm font-medium text-slate-500">
+                  <div className="px-3 py-4 text-sm font-medium text-slate-500">
                     {stu.indexno || "-"}
                   </div>
-                  {/* Name */}
-                  <div className="px-6 py-4 text-sm font-bold text-slate-800">
+                  <div className="px-3 py-4 text-sm font-bold text-slate-800">
                     {stu.firstname} {stu.lastname}
                   </div>
-                  {/* Grade */}
-                  <div className="px-6 py-4 text-sm text-slate-600">{stu.grade || "-"}</div>
-                  {/* Current Year */}
-                  <div className="px-6 py-4 text-sm text-slate-600">
+                  <div className="px-3 py-4 text-sm text-slate-600">{stu.grade || "-"}</div>
+                  <div className="px-3 py-4 text-sm text-slate-600">
                     {stu.currentYear || "-"}
                   </div>
-                  {/* Subjects (vertical list) */}
-                  <div className="px-6 py-4 text-sm text-slate-600 leading-tight">
+                  <div className="px-3 py-4 text-sm text-slate-600 leading-tight">
                     {stu.subjects?.map((sub, i) => (
                       <div key={i} className="py-0.5">
                         {typeof sub === "string" ? sub : sub?.name || ""}
                       </div>
                     ))}
                   </div>
-                  {/* Contact (formatted with +94) */}
-                  <div className="px-6 py-4 text-sm text-slate-600 font-medium">
+                  <div className="px-3 py-4 text-sm text-slate-600 font-medium">
                     {(() => {
                       let c = stu.contact || "";
                       c = c.replace(/^\+?94/, "").replace(/^0+/, "").replace(/\D/g, "").slice(0, 9);
                       return c.length === 9 ? `+94${c}` : stu.contact || "-";
                     })()}
                   </div>
-                  {/* Email */}
-                  <div className="px-6 py-4 text-sm text-slate-600">{stu.email || "-"}</div>
-                  {/* Date Registered */}
-                  <div className="px-6 py-4 text-sm text-slate-500">
+                  <div className="px-3 py-4 text-sm text-slate-600">{stu.email || "-"}</div>
+                  <div className="px-3 py-4 text-sm text-slate-500">
                     {stu.date ? new Date(stu.date).toISOString().slice(0, 10) : ""}
                   </div>
-                  {/* Action buttons */}
-                  <div className="px-4 py-4 text-center">
-                    <div className="flex flex-col justify-center items-stretch gap-2 min-w-[130px]">
+                  <div className="px-2 py-4 text-center">
+                    <div className="flex flex-col justify-center items-stretch gap-2 min-w-[100px]">
                       <button
                         onClick={() => onSelect(stu)}
-                        className="inline-flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
+                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-slate-200 text-slate-700 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:border-indigo-500 hover:text-indigo-600 transition-all active:scale-95 w-full whitespace-nowrap"
                         title="Update Student"
                       >
                         <HiOutlinePencilAlt className="text-base" />
@@ -246,7 +236,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
                       </button>
                       <button
                         onClick={() => onDelete(stu)}
-                        className="inline-flex items-center justify-center gap-2 bg-white border border-rose-100 text-rose-500 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full whitespace-nowrap"
+                        className="inline-flex items-center justify-center gap-1.5 bg-white border border-rose-100 text-rose-500 px-2.5 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-600 hover:text-white transition-all active:scale-95 w-full whitespace-nowrap"
                         title="Delete Student"
                       >
                         <HiOutlineTrash className="text-base" />
