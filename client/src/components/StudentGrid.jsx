@@ -139,9 +139,9 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* Tablet / Desktop Grid Layout – fits on one screen, no horizontal scroll */}
-      <div className="hidden md:block w-full">
-        <div className="w-full bg-white text-[13px] xl:text-sm">
+      {/* Tablet / Desktop Grid Layout – horizontal scroll restored via student-grid-scroll */}
+      <div className="hidden md:block w-full overflow-x-auto student-grid-scroll">
+        <div className="min-w-[1250px] bg-white text-[13px] xl:text-sm">
           {/* Header row */}
           <div className="grid grid-cols-[5%_13%_18%_8%_8%_13%_10%_13%_8%_4%] border-b border-slate-200">
             <div className="px-1.5 py-3 font-bold text-slate-600 text-[10px] uppercase tracking-wide text-center">
