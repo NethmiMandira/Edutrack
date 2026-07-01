@@ -128,7 +128,6 @@ export default function StudentForm({ onSave, onUpdate, selectedStudent, clearFo
     }
   }, [selectedStudent]);
 
-  // Clear form when clearFormFlag is set (from parent)
   useEffect(() => {
     if (clearFormFlag) {
       setForm(initialFormState);
@@ -167,13 +166,12 @@ export default function StudentForm({ onSave, onUpdate, selectedStudent, clearFo
 
     const submissionData = { ...form, contact: "+94" + form.contact };
     selectedStudent ? onUpdate(submissionData) : onSave(submissionData);
-    // Do not clear form here; clear only on success from parent
   };
 
   return (
     <form 
       onSubmit={handleSubmit}
-      className="bg-white rounded-[1.5rem] sm:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8 box-border animate-in fade-in zoom-in-95 duration-500"
+      className="bg-white rounded-[1.5rem] sm:rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 box-border animate-in fade-in zoom-in-95 duration-500"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         
@@ -204,7 +202,7 @@ export default function StudentForm({ onSave, onUpdate, selectedStudent, clearFo
           <input name="indexno" value={form.indexno} onChange={handleChange} className={getInputClass(!!form.indexno.trim()) + " pl-12"} placeholder="STU-2024-XXX" required />
         </InputWrapper>
 
-        {/* Grade Select - FIXED STYLE */}
+        {/* Grade Select */}
         <InputWrapper 
           label="Grade" icon={HiOutlineAcademicCap} 
           isFilled={!!form.grade}
@@ -214,15 +212,13 @@ export default function StudentForm({ onSave, onUpdate, selectedStudent, clearFo
               name="grade" 
               value={form.grade} 
               onChange={handleChange} 
-              // Added "appearance-none" and forced background color logic
               className={`${getInputClass(!!form.grade)} pl-12 appearance-none cursor-pointer`}
-              style={{ backgroundColor: !!form.grade ? '#eef2ff' : '' }} // Forced Indigo-50 hex if filled
+              style={{ backgroundColor: !!form.grade ? '#eef2ff' : '' }} 
               required
             >
               <option value="" disabled className="bg-white">Select Grade</option>
               {grades.map((g) => <option key={g} value={g} className="bg-white text-slate-700">{g}</option>)}
             </select>
-            {/* Custom Arrow because appearance-none hides the default one */}
             <div className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors ${!!form.grade ? 'text-indigo-500' : 'text-slate-400'}`}>
               <HiChevronDown className="text-xl" />
             </div>
@@ -270,7 +266,7 @@ export default function StudentForm({ onSave, onUpdate, selectedStudent, clearFo
                   list="subject-list"
                 />
                 <datalist id="subject-list">
-                      {allSubjects.map((sub) => <option key={sub._id} value={sub.name} />)}
+                    {allSubjects.map((sub) => <option key={sub._id} value={sub.name} />)}
                 </datalist>
               </div>
               <button type="button" onClick={() => navigate('/subjects')} className="px-5 bg-white border border-slate-200 rounded-2xl hover:text-indigo-600 shadow-sm transition-all flex items-center justify-center h-[52px] w-full sm:w-auto">
@@ -331,7 +327,7 @@ export default function StudentForm({ onSave, onUpdate, selectedStudent, clearFo
           />
         </InputWrapper>
 
-        {/* Date Field - FIXED STYLE */}
+        {/* Date Field */}
         <InputWrapper label="Date Registered" icon={HiOutlineCalendar} isFilled={!!form.date}>
           <input 
             name="date" 
@@ -339,7 +335,7 @@ export default function StudentForm({ onSave, onUpdate, selectedStudent, clearFo
             value={form.date} 
             onChange={handleChange} 
             className={`${getInputClass(!!form.date)} pl-12 cursor-pointer`} 
-            style={{ backgroundColor: !!form.date ? '#eef2ff' : '' }} // Forced Indigo-50 hex
+            style={{ backgroundColor: !!form.date ? '#eef2ff' : '' }} 
             required 
           />
         </InputWrapper>
