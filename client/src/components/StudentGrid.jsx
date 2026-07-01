@@ -58,7 +58,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         </div>
       </div>
 
-      {/* Mobile Cards */}
+      {/* Mobile Cards – unchanged */}
       <div className="md:hidden space-y-3 box-border">
         {sortedStudents.length === 0 ? (
           <div className="bg-white rounded-[1.5rem] shadow-xl shadow-slate-200/60 border border-slate-100 p-10 box-border">
@@ -73,6 +73,7 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
               key={stu._id || idx}
               className="bg-white rounded-[1.25rem] border border-slate-100 shadow-sm p-4 sm:p-5 box-border"
             >
+              {/* ... mobile card content (unchanged) ... */}
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-base sm:text-lg font-bold text-slate-800">
@@ -129,22 +130,42 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
         )}
       </div>
 
-      {/* Desktop Table */}
+      {/* ===================== DESKTOP TABLE ===================== */}
+      {/* Outer container: allows horizontal scrolling if the table is too wide */}
       <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 box-border w-full max-w-full overflow-x-auto">
+        {/* Table with a minimum width so all columns are preserved */}
         <table className="w-full min-w-[1200px] border-collapse text-left">
           <thead>
             <tr className="bg-slate-50/50 border-b border-slate-100">
-              <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">ID</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Index No</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Student Name</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Grade</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Current Year</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Subjects</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Contact</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Email</th>
-              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest">Date Registered</th>
-              {/* Action column with min-width to ensure buttons are visible */}
-              <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center min-w-[130px]">
+              <th className="px-4 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                ID
+              </th>
+              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Index No
+              </th>
+              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Student Name
+              </th>
+              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Grade
+              </th>
+              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Current Year
+              </th>
+              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Subjects
+              </th>
+              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Contact
+              </th>
+              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Email
+              </th>
+              <th className="px-6 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest whitespace-nowrap">
+                Date Registered
+              </th>
+              {/* Action column – guaranteed minimum width */}
+              <th className="px-2 py-5 font-bold text-slate-600 text-xs uppercase tracking-widest text-center min-w-[130px] whitespace-nowrap">
                 Action
               </th>
             </tr>
@@ -162,34 +183,43 @@ export default function StudentGrid({ students = [], onSelect, onDelete }) {
             ) : (
               sortedStudents.map((stu, idx) => (
                 <tr key={stu._id || idx} className="group hover:bg-slate-50/80 transition-all duration-200">
-                  <td className="px-4 py-4 text-sm font-bold text-slate-400 text-center">
+                  <td className="px-4 py-4 text-sm font-bold text-slate-400 text-center whitespace-nowrap">
                     {stu.numericId || "—"}
                   </td>
-                  <td className="px-6 py-4 text-sm font-medium text-slate-500">{stu.indexno}</td>
-                  <td className="px-6 py-4 text-sm font-bold text-slate-800">
+                  <td className="px-6 py-4 text-sm font-medium text-slate-500 whitespace-nowrap">
+                    {stu.indexno}
+                  </td>
+                  <td className="px-6 py-4 text-sm font-bold text-slate-800 whitespace-nowrap">
                     {stu.firstname} {stu.lastname}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{stu.grade}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{stu.currentYear || "-"}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                    {stu.grade}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                    {stu.currentYear || "-"}
+                  </td>
                   <td className="px-6 py-4 text-sm text-slate-600 leading-tight">
+                    {/* Subjects can wrap; no whitespace-nowrap */}
                     {stu.subjects?.map((sub, i) => (
                       <div key={i} className="py-0.5">
                         {typeof sub === "string" ? sub : sub?.name || ""}
                       </div>
                     ))}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600 font-medium">
+                  <td className="px-6 py-4 text-sm text-slate-600 font-medium whitespace-nowrap">
                     {(() => {
                       let c = stu.contact || "";
                       c = c.replace(/^\+?94/, "").replace(/^0+/, "").replace(/\D/g, "").slice(0, 9);
                       return c.length === 9 ? `+94${c}` : stu.contact;
                     })()}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{stu.email || "-"}</td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
+                  <td className="px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                    {stu.email || "-"}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-500 whitespace-nowrap">
                     {stu.date ? new Date(stu.date).toISOString().slice(0, 10) : ""}
                   </td>
-                  {/* Action column with min-width and reduced padding */}
+                  {/* Action column – fully visible with min-width */}
                   <td className="px-2 py-4 text-center min-w-[130px]">
                     <div className="flex flex-col justify-center items-center gap-2">
                       <button
