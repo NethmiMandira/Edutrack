@@ -6,10 +6,13 @@ const baseURL = isDevelopment
   ? 'http://localhost:5000/api'  // Development: Local backend
   : 'https://api.skmathzone.com/api';  // Production: Hostinger backend
 
-console.log(`🔌 API Configuration:
-  Environment: ${isDevelopment ? 'DEVELOPMENT' : 'PRODUCTION'}
-  Hostname: ${window.location.hostname}
-  Base URL: ${baseURL}`);
+// Log API configuration only in development
+if (isDevelopment) {
+  console.log(`🔌 API Configuration:
+    Environment: DEVELOPMENT
+    Hostname: ${window.location.hostname}
+    Base URL: ${baseURL}`);
+}
 
 const API = axios.create({
   baseURL: baseURL
@@ -18,11 +21,15 @@ const API = axios.create({
 // Add request interceptor for logging
 API.interceptors.request.use(
   config => {
-    console.log(`📤 Request: ${config.method?.toUpperCase()} ${config.url}`);
+    if (isDevelopment) {
+      console.log(`📤 Request: ${config.method?.toUpperCase()} ${config.url}`);
+    }
     return config;
   },
   error => {
-    console.error(`❌ Request failed:`, error.message);
+    if (isDevelopment) {
+      console.error(`❌ Request failed:`, error.message);
+    }
     return Promise.reject(error);
   }
 );
@@ -30,14 +37,18 @@ API.interceptors.request.use(
 // Add response interceptor for logging
 API.interceptors.response.use(
   response => {
-    console.log(`📥 Response: ${response.config.url} (${response.status}) - ${response.data?.length || 0} items`);
+    if (isDevelopment) {
+      console.log(`📥 Response: ${response.config.url} (${response.status}) - ${response.data?.length || 0} items`);
+    }
     return response;
   },
   error => {
-    const url = error.config?.url || 'unknown';
-    const status = error.response?.status || 'no status';
-    const message = error.response?.data?.error || error.message;
-    console.error(`❌ Response Error: ${url} (${status}) - ${message}`);
+    if (isDevelopment) {
+      const url = error.config?.url || 'unknown';
+      const status = error.response?.status || 'no status';
+      const message = error.response?.data?.error || error.message;
+      console.error(`❌ Response Error: ${url} (${status}) - ${message}`);
+    }
     return Promise.reject(error);
   }
 );
