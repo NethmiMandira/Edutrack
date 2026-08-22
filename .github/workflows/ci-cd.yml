@@ -12,7 +12,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -24,25 +23,60 @@ jobs:
         with:
           node-version: 20
 
-      # Install Backend Dependencies
-      - name: Install Backend Dependencies
-        working-directory: backend
-        run: npm install
+      # Uncomment and update if you have a backend folder with tests/install
+      # - name: Install Backend Dependencies
+      #   working-directory: backend
+      #   run: npm install
 
-      # Run Backend Tests (Skip if you don't have tests)
-      - name: Run Backend Tests
-        working-directory: backend
-        run: npm test
-        continue-on-error: true
-
-      # Install Frontend Dependencies
+      # Install Frontend Dependencies (using 'client' folder)
       - name: Install Frontend Dependencies
-        working-directory: frontend
+        working-directory: client
         run: npm install
 
-      # Build React Application
+      # Build React Application (using 'client' folder)
       - name: Build React App
-        working-directory: frontend
+        working-directory: client
+        run: npm run build
+
+      - name: Pipeline Completed
+        run: echo "EduTrack CI pipeline completed successfully!"name: EduTrack CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout EduTrack Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Uncomment and update if you have a backend folder with tests/install
+      # - name: Install Backend Dependencies
+      #   working-directory: backend
+      #   run: npm install
+
+      # Install Frontend Dependencies (using 'client' folder)
+      - name: Install Frontend Dependencies
+        working-directory: client
+        run: npm install
+
+      # Build React Application (using 'client' folder)
+      - name: Build React App
+        working-directory: client
         run: npm run build
 
       - name: Pipeline Completed
