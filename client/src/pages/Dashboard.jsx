@@ -8,6 +8,8 @@ import DashboardRecentMarks from "../components/tutorDashboard/DashboardRecentMa
 import DashboardSubjectPerformance from "../components/tutorDashboard/DashboardSubjectPerformance";
 import API from "../api";
 
+const isDevelopment = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
 const formatNumber = (value) => new Intl.NumberFormat().format(value || 0);
 
 const formatDateLabel = (value) => {
@@ -52,36 +54,36 @@ export default function Dashboard() {
         try {
           const res = await API.get("/students", { signal: controller.signal });
           results.students = Array.isArray(res.data) ? res.data : [];
-          console.log(`✅ Students loaded: ${results.students.length}`);
+          if (isDevelopment) console.log(`✅ Students loaded: ${results.students.length}`);
         } catch (err) {
-          console.error(`❌ Students endpoint failed:`, err.message);
+          if (isDevelopment) console.error(`❌ Students endpoint failed:`, err.message);
         }
 
         // Fetch subjects
         try {
           const res = await API.get("/subjects", { signal: controller.signal });
           results.subjects = Array.isArray(res.data) ? res.data : [];
-          console.log(`✅ Subjects loaded: ${results.subjects.length}`);
+          if (isDevelopment) console.log(`✅ Subjects loaded: ${results.subjects.length}`);
         } catch (err) {
-          console.error(`❌ Subjects endpoint failed:`, err.message);
+          if (isDevelopment) console.error(`❌ Subjects endpoint failed:`, err.message);
         }
 
         // Fetch categories
         try {
           const res = await API.get("/categories", { signal: controller.signal });
           results.categories = Array.isArray(res.data) ? res.data : [];
-          console.log(`✅ Categories loaded: ${results.categories.length}`);
+          if (isDevelopment) console.log(`✅ Categories loaded: ${results.categories.length}`);
         } catch (err) {
-          console.error(`❌ Categories endpoint failed:`, err.message);
+          if (isDevelopment) console.error(`❌ Categories endpoint failed:`, err.message);
         }
 
         // Fetch marks
         try {
           const res = await API.get("/marks", { signal: controller.signal });
           results.marks = Array.isArray(res.data) ? res.data : [];
-          console.log(`✅ Marks loaded: ${results.marks.length}`);
+          if (isDevelopment) console.log(`✅ Marks loaded: ${results.marks.length}`);
         } catch (err) {
-          console.error(`❌ Marks endpoint failed:`, err.message);
+          if (isDevelopment) console.error(`❌ Marks endpoint failed:`, err.message);
         }
 
         setStudents(results.students);
@@ -99,11 +101,13 @@ export default function Dashboard() {
           const apiError = err.response?.data?.error || err.message;
           const errorMsg = `Unable to load dashboard data.\n\n🔧 Troubleshooting:\n• API Status: Check https://skmathzone.com/api/health\n• MongoDB Connection: Verify MONGO_URI in server .env\n• Server Status: Ensure Node.js is running on Hostinger\n• Network: Check Hostinger firewall allows MongoDB Atlas\n\n❌ Error Details:\n${apiError}`;
           setError(errorMsg);
-          console.error("Dashboard API Error:", {
-            status: err.response?.status,
-            message: err.message,
-            apiError: apiError,
-          });
+          if (isDevelopment) {
+            console.error("Dashboard API Error:", {
+              status: err.response?.status,
+              message: err.message,
+              apiError: apiError,
+            });
+          }
         }
       } finally {
         setLoading(false);
