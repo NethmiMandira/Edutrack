@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   build: {
-    cssMinify: 'esbuild',
-    chunkSizeWarningLimit: 1000, // Raises warning limit to 1MB
+    cssMinify: false, // Prevents esbuild missing package errors on CI/Hostinger
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks(id) {
