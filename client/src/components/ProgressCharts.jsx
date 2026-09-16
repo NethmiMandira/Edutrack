@@ -160,33 +160,51 @@ const ProgressCharts = ({ studentIndexNo, subjectName }) => {
   };
 
   const fallbackColors = [
-    "bg-red-300",
-    "bg-green-300",
-    "bg-blue-300",
-    "bg-yellow-300",
-    "bg-purple-300",
-    "bg-orange-300",
-    "bg-pink-300",
-    "bg-indigo-300",
-    "bg-lime-300",
+    "bg-sky-500",
+    "bg-emerald-500",
+    "bg-indigo-500",
+    "bg-amber-500",
+    "bg-rose-500",
+    "bg-violet-500",
+    "bg-cyan-500",
+    "bg-orange-500",
+    "bg-teal-500",
+    "bg-fuchsia-500",
+    "bg-lime-500",
+    "bg-pink-500",
   ];
 
-  const getCategoryColor = (category) => {
+  const chartCategories = Array.from(
+    new Set(
+      termLayouts.flatMap((term) =>
+        term.data.flatMap((monthData) =>
+          (monthData.categories || []).map((item) => item.category)
+        )
+      )
+    )
+  );
+
+  const categoryColors = new Map();
+  const usedColors = new Set();
+
+  chartCategories.forEach((category) => {
     const normalizedCategory = String(category || "").trim().toLowerCase();
-
-    if (categoryColorMap[normalizedCategory]) {
-      return categoryColorMap[normalizedCategory];
+    const knownColor = categoryColorMap[normalizedCategory];
+    if (knownColor && !usedColors.has(knownColor)) {
+      categoryColors.set(category, knownColor);
+      usedColors.add(knownColor);
     }
+  });
 
-    // Use a consistent hash based on category name
-    let hash = 0;
-    for (let i = 0; i < normalizedCategory.length; i++) {
-      hash = ((hash << 5) - hash) + normalizedCategory.charCodeAt(i);
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    const index = Math.abs(hash) % fallbackColors.length;
-    return fallbackColors[index];
-  };
+  chartCategories.forEach((category) => {
+    if (categoryColors.has(category)) return;
+    const nextColor = fallbackColors.find((color) => !usedColors.has(color));
+    const color = nextColor || fallbackColors[categoryColors.size % fallbackColors.length];
+    categoryColors.set(category, color);
+    usedColors.add(color);
+  });
+
+  const getCategoryColor = (category) => categoryColors.get(category) || "bg-slate-400";
 
   const hasMarks = termLayouts.some((term) => term.data.some((month) => month.categories.length > 0));
 
@@ -249,13 +267,9 @@ const ProgressCharts = ({ studentIndexNo, subjectName }) => {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-        {Array.from(
-          new Set(
-            term.data.flatMap((monthData) =>
-              (monthData.categories || []).map((item) => item.category)
-            )
-          )
-        ).map((category) => (
+        {Array.from(new Set(term.data.flatMap((monthData) =>
+          (monthData.categories || []).map((item) => item.category)
+        ))).map((category) => (
           <div key={category} className="flex items-center gap-1.5">
             <span className={`w-3 h-3 rounded-sm ${getCategoryColor(category)}`} />
             <span className="text-xs text-slate-600">{category}</span>

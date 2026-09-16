@@ -83,13 +83,35 @@ const fallbackColors = [
   'bg-amber-500',
   'bg-rose-500',
   'bg-violet-500',
+  'bg-cyan-500',
+  'bg-orange-500',
+  'bg-teal-500',
+  'bg-fuchsia-500',
+  'bg-lime-500',
+  'bg-pink-500',
 ];
 
-const getCategoryColor = (category) => {
-  const normalizedCategory = String(category || '').trim().toLowerCase();
-  if (categoryColorMap[normalizedCategory]) return categoryColorMap[normalizedCategory];
-  const index = normalizedCategory.length % fallbackColors.length;
-  return fallbackColors[index];
+const buildCategoryColors = (categories) => {
+  const colors = new Map();
+  const usedColors = new Set();
+
+  categories.forEach((category) => {
+    const knownColor = categoryColorMap[String(category || '').trim().toLowerCase()];
+    if (knownColor && !usedColors.has(knownColor)) {
+      colors.set(category, knownColor);
+      usedColors.add(knownColor);
+    }
+  });
+
+  categories.forEach((category) => {
+    if (colors.has(category)) return;
+    const nextColor = fallbackColors.find((color) => !usedColors.has(color));
+    const color = nextColor || fallbackColors[colors.size % fallbackColors.length];
+    colors.set(category, color);
+    usedColors.add(color);
+  });
+
+  return colors;
 };
 
 const TermChart = ({ term }) => {
@@ -100,6 +122,7 @@ const TermChart = ({ term }) => {
       )
     )
   );
+  const categoryColors = buildCategoryColors(chartCategories);
 
   return (
     <section className="rounded-[2rem] border-2 border-slate-200 bg-white p-5 shadow-sm">
@@ -123,7 +146,7 @@ const TermChart = ({ term }) => {
       <div className="mb-3 flex flex-wrap items-center gap-3">
         {chartCategories.map((category) => (
           <div key={category} className="flex items-center gap-1.5">
-            <span className={`h-3 w-3 rounded-sm ${getCategoryColor(category)}`} />
+            <span className={`h-3 w-3 rounded-sm ${categoryColors.get(category) || 'bg-slate-400'}`} />
             <span className="text-xs text-slate-600">{category}</span>
           </div>
         ))}
@@ -154,7 +177,7 @@ const TermChart = ({ term }) => {
                       {clamp(entry.marks)}
                     </span>
                     <div
-                      className={`w-2 rounded-t-sm md:w-3 ${getCategoryColor(entry.category)}`}
+                      className={`w-2 rounded-t-sm md:w-3 ${categoryColors.get(entry.category) || 'bg-slate-400'}`}
                       style={{
                         height: `${Math.max(8, (clamp(entry.marks) / MAX_SCORE) * 100)}%`,
                       }}
