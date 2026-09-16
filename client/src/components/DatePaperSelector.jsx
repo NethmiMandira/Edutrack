@@ -15,18 +15,13 @@ export default function DatePaperSelector({ date, setDate, grade, setGrade, subj
   const [subjects, setSubjects] = useState([]);
   const [paperCategories, setPaperCategories] = useState([]);
 
-  const isTestRecord = (name = "") => {
-    const normalized = String(name).trim().toLowerCase();
-    return normalized.includes("test") || normalized.includes("temp");
-  };
-
   useEffect(() => {
     let mounted = true;
     API.get('/subjects')
       .then(res => {
         if (!mounted) return;
         const data = res.data;
-        if (Array.isArray(data)) setSubjects(data.filter(item => !isTestRecord(item?.name)));
+        if (Array.isArray(data)) setSubjects(data);
       })
       .catch(() => {});
 
@@ -34,7 +29,7 @@ export default function DatePaperSelector({ date, setDate, grade, setGrade, subj
       .then(res => {
         if (!mounted) return;
         const data = res.data;
-        if (Array.isArray(data)) setPaperCategories(data.filter(item => !isTestRecord(item?.name)));
+        if (Array.isArray(data)) setPaperCategories(data);
       })
       .catch(() => {});
 
