@@ -3,15 +3,15 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
-// Firebase configuration for edutrack-2a736
+// Configured using Vite environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyDS7hfpBrOwjp-WnJdU3hHz-pamtWK_1ig",
-  authDomain: "edutrack-2a736.firebaseapp.com",
-  projectId: "edutrack-2a736",
-  storageBucket: "edutrack-2a736.firebasestorage.app",
-  messagingSenderId: "86107452145",
-  appId: "1:86107452145:web:d3de9a715392ecd923af50",
-  measurementId: "G-NJENSKCT20"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
