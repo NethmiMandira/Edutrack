@@ -19,6 +19,7 @@ export default function TutorLogin() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -88,11 +89,9 @@ export default function TutorLogin() {
               <HiOutlineShieldCheck />
             </Motion.div>
 
-            {/* Added Title Here */}
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight text-center">
               {isSignup ? "Request Tutor Access" : "Tutor Login"}
             </h2>
-            
           </div>
 
           {/* Error / Success Notification */}
@@ -117,54 +116,67 @@ export default function TutorLogin() {
             )}
           </AnimatePresence>
 
-            <form onSubmit={handleLogin} className="space-y-5 sm:space-y-6">
+          <form onSubmit={handleLogin} className="space-y-5 sm:space-y-6">
             {/* Input Groups */}
-              <div className="space-y-3.5 sm:space-y-4">
+            <div className="space-y-3.5 sm:space-y-4">
               <div className="relative group">
                 <div className="pointer-events-none absolute inset-0 bg-indigo-500/0 group-focus-within:bg-indigo-500/5 rounded-2xl transition-all duration-300" />
-                  <HiOutlineUser className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
+                <HiOutlineUser className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
                 <input
                   type="text"
                   placeholder={isSignup ? "Choose a username (any text)" : "Username"}
-                    className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
+                  className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
-              {isSignup && (
-                <div className="relative group">
-                  <HiOutlineLockClosed className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Confirm password"
-                    className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                  />
-                </div>
-              )}
 
+              {/* Password Field */}
               <div className="relative group">
                 <div className="pointer-events-none absolute inset-0 bg-indigo-500/0 group-focus-within:bg-indigo-500/5 rounded-2xl transition-all duration-300" />
-                  <HiOutlineLockClosed className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
+                <HiOutlineLockClosed className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                    className="w-full pl-12 pr-12 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
+                  className="w-full pl-12 pr-12 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <button
                   type="button"
-                    className="absolute right-4 top-3.5 sm:top-4 text-slate-500 hover:text-white transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-4 top-3.5 sm:top-4 text-slate-500 hover:text-white transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <HiOutlineEyeOff size={22} /> : <HiOutlineEye size={22} />}
                 </button>
               </div>
+
+              {/* Confirm Password Field with Eye Toggle (Shown during Signup) */}
+              {isSignup && (
+                <div className="relative group">
+                  <div className="pointer-events-none absolute inset-0 bg-indigo-500/0 group-focus-within:bg-indigo-500/5 rounded-2xl transition-all duration-300" />
+                  <HiOutlineLockClosed className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm password"
+                    className="w-full pl-12 pr-12 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                    className="absolute right-4 top-3.5 sm:top-4 text-slate-500 hover:text-white transition-colors"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? <HiOutlineEyeOff size={22} /> : <HiOutlineEye size={22} />}
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Premium Button */}
@@ -197,7 +209,6 @@ export default function TutorLogin() {
 
           {/* Footer Decoration */}
           <div className="mt-6 sm:mt-8 flex justify-center border-t border-white/5 pt-5 sm:pt-6">
-
           </div>
         </div>
       </Motion.div>

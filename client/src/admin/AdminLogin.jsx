@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
 import { auth } from '../firebase/config';
 
-const ADMIN_EMAIL = 'mandiranethmi03@gmail.com';
+// Load admin email from environment variables or keep string comparison
+const ADMIN_EMAIL = (import.meta.env.VITE_ADMIN_EMAIL || 'mandiranethmi03@gmail.com').toLowerCase();
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState(ADMIN_EMAIL);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -29,7 +30,7 @@ export default function AdminLogin() {
     setError('');
     setLoading(true);
     try {
-      const credential = await signInWithEmailAndPassword(auth, email, password);
+      const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
       if ((credential.user.email || '').toLowerCase() !== ADMIN_EMAIL) {
         await auth.signOut();
         setError('This account is not authorised for the admin panel.');
@@ -52,12 +53,23 @@ export default function AdminLogin() {
         <h1 className="mt-3 text-3xl font-black">Administrator sign in</h1>
         <p className="mt-2 text-sm text-slate-400">Manage tutor access and password resets.</p>
         {error && <p className="mt-5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-sm text-rose-300">{error}</p>}
-        <label className="mt-6 block text-sm font-semibold text-slate-300">Email<input className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
+        <label className="mt-6 block text-sm font-semibold text-slate-300">
+          Email
+          <input
+            className="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3"
+            type="email"
+            placeholder="admin@example.com"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
+        </label>
         <label className="mt-4 block text-sm font-semibold text-slate-300">Password</label>
         <div className="relative mt-2">
           <input
             className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 pr-12"
             type={showPassword ? 'text' : 'password'}
+            placeholder="••••••••"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
@@ -71,7 +83,9 @@ export default function AdminLogin() {
             {showPassword ? <HiOutlineEyeOff size={20} /> : <HiOutlineEye size={20} />}
           </button>
         </div>
-        <button className="mt-6 w-full rounded-xl bg-indigo-500 px-4 py-3 font-bold hover:bg-indigo-400 disabled:opacity-50" type="submit" disabled={loading}>{loading ? 'Signing in…' : 'Sign in'}</button>
+        <button className="mt-6 w-full rounded-xl bg-indigo-500 px-4 py-3 font-bold hover:bg-indigo-400 disabled:opacity-50" type="submit" disabled={loading}>
+          {loading ? 'Signing in…' : 'Sign in'}
+        </button>
       </form>
     </main>
   );
