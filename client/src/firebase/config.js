@@ -1,19 +1,25 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getAnalytics } from 'firebase/analytics';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 
+// Firebase configuration for edutrack-2a736
 const firebaseConfig = {
-  apiKey: 'AIzaSyCdnxjatu4_EkgheCkjsW08LxEKfjEtG7s',
-  authDomain: 'sk-maths-zone.firebaseapp.com',
-  projectId: 'sk-maths-zone',
-  storageBucket: 'sk-maths-zone.firebasestorage.app',
-  messagingSenderId: '756333606184',
-  appId: '1:756333606184:web:512e551f888494bd544c1d',
-  measurementId: 'G-RXBWGH0CPN'
+  apiKey: "AIzaSyDS7hfpBrOwjp-WnJdU3hHz-pamtWK_1ig",
+  authDomain: "edutrack-2a736.firebaseapp.com",
+  projectId: "edutrack-2a736",
+  storageBucket: "edutrack-2a736.firebasestorage.app",
+  messagingSenderId: "86107452145",
+  appId: "1:86107452145:web:d3de9a715392ecd923af50",
+  measurementId: "G-NJENSKCT20"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-export { app, auth, analytics };
+// Analytics only initializes in browser environments
+const analytics = typeof window !== "undefined" ? getAnalytics(app) : null;
+
+export { app, auth, db, analytics };
