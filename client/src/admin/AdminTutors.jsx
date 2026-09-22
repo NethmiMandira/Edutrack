@@ -118,13 +118,19 @@ export default function AdminTutors() {
         {error && <p className="mt-6 rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-rose-300">{error}</p>}
         {notice && <p className="mt-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-emerald-300">{notice}</p>}
         <section className="mt-8 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900">
-          <div className="grid grid-cols-[1fr_auto_auto] gap-4 border-b border-slate-800 px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500"><span>Username</span><span>Status</span><span>Actions</span></div>
+          <div className="grid grid-cols-[1fr_auto_auto] gap-4 border-b border-slate-800 px-5 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+            <span>Username</span>
+            <span>Status</span>
+            <span>Actions</span>
+          </div>
           {tutors.length === 0 && <p className="p-6 text-slate-400">No tutor requests yet.</p>}
           {tutors.map((tutor) => (
             <div key={tutor._id} className="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b border-slate-800/80 px-5 py-5 last:border-0">
               <div>
                 <p className="font-bold">{tutor.username}</p>
-                <p className="text-xs text-slate-500">Requested {new Date(tutor.createdAt).toLocaleString()}</p>
+                <p className="text-xs text-slate-500">
+                  Requested {tutor.createdAt ? new Date(tutor.createdAt).toLocaleString() : 'N/A'}
+                </p>
               </div>
               <span className={`rounded-full px-3 py-1 text-xs font-bold capitalize ${statusStyles[tutor.status] || statusStyles.pending}`}>{tutor.status}</span>
               <div className="flex flex-wrap justify-end gap-2">
