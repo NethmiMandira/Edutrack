@@ -8,6 +8,8 @@ EduTrack helps tutors efficiently manage students, subjects, papers, marks, and 
 
 👨‍🏫 Tutor Portal
 
+- 📝 Self sign-up with a free-choice username and password (no email required)
+- ⏳ Login is unlocked only after an administrator approves the request
 - 👨‍🎓 Register and manage students
 - 📚 Manage subjects and paper categories
 - 📝 Add and manage student marks
@@ -15,6 +17,12 @@ EduTrack helps tutors efficiently manage students, subjects, papers, marks, and 
 - 📤 Send paper and mark details via SMS
 - 📊 Monitor student academic progress
 - ⬆️ Promote students
+
+🛡️ Admin Portal
+
+- 🔐 Sign in with Firebase (admin email only) at `/admin/login`
+- ✅ Approve or reject tutor requests
+- 🔑 Reset a tutor's password when they forget their credentials
 
 👨‍🎓 Student Portal
 
@@ -42,4 +50,9 @@ EduTrack helps tutors efficiently manage students, subjects, papers, marks, and 
   <img src="https://skillicons.dev/icons?i=mongodb" width="45" alt="MongoDB"/>
   <img src="https://skillicons.dev/icons?i=firebase" width="45" alt="Firebase"/>
 </p>React.js • JavaScript • HTML5 • CSS3 • Node.js • Express.js • MongoDB • Firebase
+
+🔑 Authentication Model
+
+- **Tutors** authenticate with a username + password stored in MongoDB (`server/routes/tutorAuthRoutes.js`). Passwords are hashed with `scrypt`; sessions are signed HMAC tokens. New sign-ups start as `pending` and cannot log in until an admin approves them.
+- **Administrators** authenticate through **Firebase Authentication** (email + password). Only the configured admin email/UID may use the admin panel (`server/middleware/auth.js`). The admin panel lives in its own folder: `client/src/admin/`.
 

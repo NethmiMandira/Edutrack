@@ -15,6 +15,9 @@ import StudentDashboard from './studentDashoard/pages/StudentDashboard';
 import StudentMyProgress from './studentDashoard/pages/StudentMyProgress';
 import StudentPaperHistory from './studentDashoard/pages/StudentPaperHistory';
 import StudentProfile from './studentDashoard/pages/StudentProfile';
+import AdminLogin from './admin/AdminLogin';
+import AdminTutors from './admin/AdminTutors';
+import AdminProtectedRoute from './admin/AdminProtectedRoute';
 
 function Home() {
   return (
@@ -148,6 +151,8 @@ const App = () => {
         )}
       />
       <Route path="/tutor/login" element={<TutorLogin />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/tutors" element={<AdminProtectedRoute><AdminTutors /></AdminProtectedRoute>} />
 
       <Route path="/student/login" element={<StudentLogin />} />
       <Route path="/student" element={<StudentLogin />} />

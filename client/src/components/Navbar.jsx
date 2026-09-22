@@ -147,7 +147,11 @@ export default function Sidebar() {
         {/* Logout Section */}
         <div className="px-3 pt-4 border-t border-slate-800/50">
           <button
-            onClick={() => navigate("/tutor/login")}
+            onClick={() => {
+              localStorage.removeItem("tutor");
+              localStorage.removeItem("tutorToken");
+              navigate("/tutor/login");
+            }}
             className={`w-full flex items-center py-3.5 rounded-xl text-rose-400/80 hover:bg-rose-500/10 hover:text-rose-400 transition-all group ${
               shouldShowText ? "px-4 gap-4" : "justify-center"
             }`}

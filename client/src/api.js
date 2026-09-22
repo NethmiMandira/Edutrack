@@ -21,6 +21,11 @@ const API = axios.create({
 // Add request interceptor for logging
 API.interceptors.request.use(
   config => {
+    const tutorToken = localStorage.getItem('tutorToken');
+    if (tutorToken && !config.headers?.Authorization) {
+      config.headers = config.headers || {};
+      config.headers.Authorization = `Bearer ${tutorToken}`;
+    }
     if (isDevelopment) {
       console.log(`📤 Request: ${config.method?.toUpperCase()} ${config.url}`);
     }

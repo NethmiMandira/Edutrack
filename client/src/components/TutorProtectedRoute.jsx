@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase/config';
-
-const TUTOR_UID = 'b8B7cTSZUUMvIfVWzA4HFz0yAJJ3';
 
 export default function TutorProtectedRoute({ children }) {
-  const [currentUser, setCurrentUser] = useState(auth.currentUser);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setIsLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  if (isLoading) {
-    return null;
+  let tutor = null;
+  try {
+    tutor = JSON.parse(localStorage.getItem('tutor') || 'null');
+  } catch {
+    localStorage.removeItem('tutor');
   }
 
-  if (!currentUser || currentUser.uid !== TUTOR_UID) {
+  if (!tutor || tutor.role !== 'tutor' || !localStorage.getItem('tutorToken')) {
     return <Navigate to="/tutor/login" replace />;
   }
 

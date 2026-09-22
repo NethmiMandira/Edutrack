@@ -12,6 +12,9 @@ const Student = require('./models/tutor/Student');
 const StudentAuth = require('./models/student/StudentAuth');
 const MarksEntry = require('./models/tutor/MarksEntry');
 const studentAuthRoutes = require('./routes/studentAuthRoutes');
+const tutorAuthRoutes = require('./routes/tutorAuthRoutes');
+const adminAuthRoutes = require('./routes/adminAuthRoutes');
+const { requireTutor } = require('./middleware/auth');
 const crypto = require('crypto');
 
 const escapeRegExp = (value) => String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -438,6 +441,9 @@ app.get('/api/student/profile/:indexno', getStudentProfileByIndex);
 
 // Mount student auth routes
 app.use('/api/student', studentAuthRoutes);
+app.use('/api/tutor', tutorAuthRoutes);
+app.use('/api/admin', adminAuthRoutes);
+app.use('/api', requireTutor);
 
 // --- ENDPOINTS START HERE ---
 

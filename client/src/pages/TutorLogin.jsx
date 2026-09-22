@@ -1,48 +1,57 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
 import { 
-  HiOutlineMail, 
+  HiOutlineUser,
   HiOutlineLockClosed, 
   HiOutlineEye, 
   HiOutlineEyeOff, 
-  HiOutlineShieldCheck 
+  HiOutlineShieldCheck,
 } from "react-icons/hi";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion as Motion, AnimatePresence } from "framer-motion";
 
 export default function TutorLogin() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSignup, setIsSignup] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess("");
 
-    // Read credentials directly from environment variables
-    const validEmail = import.meta.env.VITE_TUTOR_EMAIL || process.env.REACT_APP_TUTOR_EMAIL;
-    const validPassword = import.meta.env.VITE_TUTOR_PASSWORD || process.env.REACT_APP_TUTOR_PASSWORD;
-
-    setTimeout(() => {
-      if (email === validEmail && password === validPassword) {
-        // Save dummy auth token to local storage for persistent login state
-        localStorage.setItem("tutor_authenticated", "true");
-        navigate("/dashboard");
+    try {
+      if (isSignup) {
+        const response = await API.post("/tutor/signup", { username, password, confirmPassword });
+        setSuccess(response.data.message);
+        setPassword("");
+        setConfirmPassword("");
+        setIsSignup(false);
       } else {
-        setError("Invalid email or password.");
+        const response = await API.post("/tutor/login", { username, password });
+        localStorage.setItem("tutorToken", response.data.token);
+        localStorage.setItem("tutor", JSON.stringify(response.data.tutor));
+        navigate("/dashboard");
       }
+    } catch (err) {
+      setError(err.response?.data?.error || "Unable to complete the request.");
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f172a] px-4 py-8 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Dynamic Animated Background Elements */}
       <div className="absolute inset-0 z-0">
-        <motion.div 
+        <Motion.div
           animate={{ 
             scale: [1, 1.2, 1],
             rotate: [0, 90, 0],
@@ -51,7 +60,7 @@ export default function TutorLogin() {
           transition={{ duration: 20, repeat: Infinity }}
           className="absolute -top-[10%] -right-[10%] w-[320px] h-[320px] sm:w-[420px] sm:h-[420px] lg:w-[600px] lg:h-[600px] bg-indigo-600/20 rounded-full blur-[90px] sm:blur-[110px] lg:blur-[120px]" 
         />
-        <motion.div 
+        <Motion.div
           animate={{ 
             scale: [1, 1.3, 1],
             rotate: [0, -45, 0],
@@ -62,7 +71,7 @@ export default function TutorLogin() {
         />
       </div>
 
-      <motion.div 
+      <Motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         className="relative z-10 w-full max-w-[420px] sm:max-w-[460px]"
@@ -72,64 +81,85 @@ export default function TutorLogin() {
           
           {/* Top Brand Section */}
           <div className="flex flex-col items-center mb-8 sm:mb-10 lg:mb-12">
-            <motion.div 
+            <Motion.div
               whileHover={{ rotate: 15 }}
               className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center text-white text-3xl sm:text-4xl shadow-[0_0_40px_rgba(99,102,241,0.4)] mb-5 sm:mb-6"
             >
               <HiOutlineShieldCheck />
-            </motion.div>
-            
+            </Motion.div>
+
+            {/* Added Title Here */}
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight text-center">
-              Tutor Login
+              {isSignup ? "Request Tutor Access" : "Tutor Login"}
             </h2>
+            
           </div>
 
-          {/* Error Notification */}
+          {/* Error / Success Notification */}
           <AnimatePresence>
-            {error && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }} 
+            {(error || success) && (
+              <Motion.div
+                initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="mb-5 sm:mb-6 overflow-hidden"
               >
-                <div className="bg-rose-500/10 border border-rose-500/20 text-rose-300 text-[11px] sm:text-xs font-bold p-3 sm:p-3.5 rounded-2xl text-center">
-                  {error}
+                <div
+                  className={`text-[11px] sm:text-xs font-bold p-3 sm:p-3.5 rounded-2xl text-center border ${
+                    error
+                      ? "bg-rose-500/10 border-rose-500/20 text-rose-300"
+                      : "bg-emerald-500/10 border-emerald-500/20 text-emerald-300"
+                  }`}
+                >
+                  {error || success}
                 </div>
-              </motion.div>
+              </Motion.div>
             )}
           </AnimatePresence>
 
-          <form onSubmit={handleLogin} className="space-y-5 sm:space-y-6">
+            <form onSubmit={handleLogin} className="space-y-5 sm:space-y-6">
             {/* Input Groups */}
-            <div className="space-y-3.5 sm:space-y-4">
+              <div className="space-y-3.5 sm:space-y-4">
               <div className="relative group">
                 <div className="pointer-events-none absolute inset-0 bg-indigo-500/0 group-focus-within:bg-indigo-500/5 rounded-2xl transition-all duration-300" />
-                <HiOutlineMail className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
+                  <HiOutlineUser className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
                 <input
-                  type="email"
-                  placeholder="Administrator Email"
-                  className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  placeholder={isSignup ? "Choose a username (any text)" : "Username"}
+                    className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
+              {isSignup && (
+                <div className="relative group">
+                  <HiOutlineLockClosed className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Confirm password"
+                    className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
 
               <div className="relative group">
                 <div className="pointer-events-none absolute inset-0 bg-indigo-500/0 group-focus-within:bg-indigo-500/5 rounded-2xl transition-all duration-300" />
-                <HiOutlineLockClosed className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
+                  <HiOutlineLockClosed className="pointer-events-none absolute left-4 top-3.5 sm:top-4 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={22} />
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className="w-full pl-12 pr-12 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
+                    className="w-full pl-12 pr-12 py-3.5 sm:py-4 bg-white/5 border border-white/5 text-white placeholder-slate-600 rounded-2xl focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-3.5 sm:top-4 text-slate-500 hover:text-white transition-colors"
+                    className="absolute right-4 top-3.5 sm:top-4 text-slate-500 hover:text-white transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <HiOutlineEyeOff size={22} /> : <HiOutlineEye size={22} />}
@@ -137,8 +167,8 @@ export default function TutorLogin() {
               </div>
             </div>
 
-            {/* Submit Button */}
-            <motion.button
+            {/* Premium Button */}
+            <Motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
@@ -152,14 +182,25 @@ export default function TutorLogin() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                ) : "Unlock Dashboard"}
+                ) : isSignup ? "Send Approval Request" : "Unlock Dashboard"}
               </span>
-            </motion.button>
+            </Motion.button>
           </form>
 
-          <div className="mt-6 sm:mt-8 flex justify-center border-t border-white/5 pt-5 sm:pt-6"></div>
+          <button
+            type="button"
+            onClick={() => { setIsSignup((value) => !value); setError(""); setSuccess(""); }}
+            className="mt-5 w-full text-sm font-semibold text-indigo-300 hover:text-white transition-colors"
+          >
+            {isSignup ? "Already approved? Sign in" : "Need tutor access? Create a request"}
+          </button>
+
+          {/* Footer Decoration */}
+          <div className="mt-6 sm:mt-8 flex justify-center border-t border-white/5 pt-5 sm:pt-6">
+
+          </div>
         </div>
-      </motion.div>
+      </Motion.div>
     </div>
   );
 }
