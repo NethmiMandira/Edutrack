@@ -43,8 +43,14 @@ API.interceptors.request.use(
       // Tutor-only endpoint: never fall back to a stray studentToken
       token = tutorToken;
     } else {
-      // Shared/student endpoint: prefer whichever role is actually logged in here
-      token = studentToken || tutorToken;
+      // Shared/student endpoint (including GET /marks): prefer the tutor
+      // token when one exists. This prevents a stale studentToken left in
+      // localStorage (e.g. from testing the student login in the same
+      // browser) from silently hijacking a tutor's request and scoping
+      // GET /marks down to just that one student's records. Only fall
+      // back to studentToken when there's genuinely no tutor session,
+      // i.e. this really is a student using the app.
+      token = tutorToken || studentToken;
     }
 
     if (token && !config.headers?.Authorization) {
