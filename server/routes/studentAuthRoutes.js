@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 const crypto = require('crypto');
 const StudentAuth = require('../models/student/StudentAuth');
 const Student = require('../models/tutor/Student');
+const { createStudentToken } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -264,6 +265,7 @@ router.post('/login', async (req, res) => {
 
     res.json({
       message: 'Login successful',
+      token: createStudentToken(studentAuth),
       student: {
         indexno: studentRecord.indexno,
         firstname: studentRecord.firstname,

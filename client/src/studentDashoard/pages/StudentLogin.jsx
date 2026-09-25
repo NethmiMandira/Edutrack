@@ -30,7 +30,8 @@ const StudentLogin = () => {
         return;
       }
 
-      // Success - store student data and redirect
+      // Success - store the authenticated session and student data.
+      localStorage.setItem('studentToken', data.token);
       localStorage.setItem('student', JSON.stringify(data.student));
       navigate('/student/dashboard');
     } catch (err) {

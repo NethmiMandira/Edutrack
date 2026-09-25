@@ -22,9 +22,11 @@ const API = axios.create({
 API.interceptors.request.use(
   config => {
     const tutorToken = localStorage.getItem('tutorToken');
-    if (tutorToken && !config.headers?.Authorization) {
+    const studentToken = localStorage.getItem('studentToken');
+    const token = tutorToken || studentToken;
+    if (token && !config.headers?.Authorization) {
       config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${tutorToken}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     if (isDevelopment) {
       console.log(`📤 Request: ${config.method?.toUpperCase()} ${config.url}`);

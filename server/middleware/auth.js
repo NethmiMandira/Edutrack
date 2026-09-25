@@ -19,6 +19,29 @@ const createTutorToken = (tutor) => {
   return `${payload}.${signature}`;
 };
 
+const createStudentToken = (student) => {
+  const payload = base64UrlEncode(JSON.stringify({
+    id: String(student.indexno),
+    role: 'student',
+    exp: Date.now() + (7 * 24 * 60 * 60 * 1000),
+  }));
+  const signature = crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('base64url');
+  return `${payload}.${signature}`;
+};
+
+const verifySessionToken = (token) => {
+  if (!token) return null;
+  const [payload, signature] = token.split('.');
+  const expected = crypto.createHmac('sha256', SESSION_SECRET).update(payload || '').digest('base64url');
+  if (!payload || !signature) return null;
+  const actual = Buffer.from(signature);
+  const calculated = Buffer.from(expected);
+  if (actual.length !== calculated.length || !crypto.timingSafeEqual(actual, calculated)) return null;
+  const session = JSON.parse(base64UrlDecode(payload));
+  if (!session.exp || session.exp < Date.now()) return null;
+  return session;
+};
+
 const getBearerToken = (req) => {
   const header = req.headers.authorization || '';
   return header.startsWith('Bearer ') ? header.slice(7).trim() : null;
@@ -26,24 +49,27 @@ const getBearerToken = (req) => {
 
 const requireTutor = (req, res, next) => {
   try {
-    const token = getBearerToken(req);
-    if (!token) return res.status(401).json({ error: 'Tutor authentication is required.' });
-
-    const [payload, signature] = token.split('.');
-    const expected = crypto.createHmac('sha256', SESSION_SECRET).update(payload || '').digest('base64url');
-    if (!payload || !signature || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) {
-      return res.status(401).json({ error: 'Invalid tutor session.' });
+    const session = verifySessionToken(getBearerToken(req));
+    if (!session || session.role !== 'tutor' || !session.id) {
+      return res.status(401).json({ error: 'Tutor authentication is required.' });
     }
-
-    const session = JSON.parse(base64UrlDecode(payload));
-    if (session.role !== 'tutor' || !session.id || !session.exp || session.exp < Date.now()) {
-      return res.status(401).json({ error: 'Tutor session expired.' });
-    }
-
     req.tutor = session;
     return next();
   } catch {
     return res.status(401).json({ error: 'Invalid tutor session.' });
+  }
+};
+
+const requireStudent = (req, res, next) => {
+  try {
+    const session = verifySessionToken(getBearerToken(req));
+    if (!session || session.role !== 'student' || !session.id) {
+      return res.status(401).json({ error: 'Student authentication is required.' });
+    }
+    req.student = session;
+    return next();
+  } catch {
+    return res.status(401).json({ error: 'Invalid student session.' });
   }
 };
 
@@ -65,6 +91,21 @@ const ensureFirebaseAdmin = () => {
   admin.initializeApp({ credential: admin.credential.applicationDefault() });
 };
 
+const requireStudentOrTutor = (req, res, next) => {
+  try {
+    const session = verifySessionToken(getBearerToken(req));
+    if (!session || !['student', 'tutor'].includes(session.role) || !session.id) {
+      return res.status(401).json({ error: 'Authentication is required.' });
+    }
+    req.session = session;
+    if (session.role === 'student') req.student = session;
+    else req.tutor = session;
+    return next();
+  } catch {
+    return res.status(401).json({ error: 'Invalid session.' });
+  }
+};
+
 const requireAdmin = async (req, res, next) => {
   try {
     const token = getBearerToken(req);
@@ -84,4 +125,4 @@ const requireAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { createTutorToken, requireTutor, requireAdmin };
+module.exports = { createTutorToken, createStudentToken, requireTutor, requireStudent, requireStudentOrTutor, requireAdmin };

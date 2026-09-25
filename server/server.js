@@ -14,7 +14,7 @@ const MarksEntry = require('./models/tutor/MarksEntry');
 const studentAuthRoutes = require('./routes/studentAuthRoutes');
 const tutorAuthRoutes = require('./routes/tutorAuthRoutes');
 const adminAuthRoutes = require('./routes/adminAuthRoutes');
-const { requireTutor } = require('./middleware/auth');
+const { requireTutor, requireStudentOrTutor } = require('./middleware/auth');
 const crypto = require('crypto');
 
 const escapeRegExp = (value) => String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -73,26 +73,26 @@ const escapeXml = (value) => String(value || '')
 
 const formatPhoneNumber = (phoneNumber) => {
   if (!phoneNumber) return null;
-  
+
   // Remove all non-digit characters
   let cleaned = String(phoneNumber).replace(/\D/g, '');
-  
+
   // Remove leading zeros and plus signs
   cleaned = cleaned.replace(/^0+/, '');
-  
+
   // If empty after cleaning, return null
   if (!cleaned) return null;
-  
+
   // If doesn't start with country code, add Sri Lanka's 94
   if (!cleaned.startsWith('94')) {
     cleaned = `94${cleaned}`;
   }
-  
+
   // Validate length (Sri Lanka numbers should be 10 digits after 94 prefix = 12 total)
   if (cleaned.length < 10 || cleaned.length > 12) {
     console.warn(`⚠️ Phone number may be invalid: ${cleaned} (length: ${cleaned.length})`);
   }
-  
+
   return cleaned;
 };
 
@@ -107,7 +107,7 @@ const buildMobitelCampaignName = (indexno) => {
 const buildMobitelWelcomeMessage = ({ firstname, lastname, indexno, password }) => {
   // Use first name only; generate welcome message
   const name = (String(firstname || '')).trim() || indexno;
-  
+
   // Build message with exact format: Hello {name}, your account ready. Login: URL ID: indexno Password: password
   return `Hello ${name}, your student account is ready. Login: https://skmathzone.com/student/login ID:${indexno} Password:${password}`;
 };
@@ -369,7 +369,7 @@ app.get('/api/debug/status', async (req, res) => {
       categories: await Category.countDocuments(),
       marks: await MarksEntry.countDocuments(),
     };
-    
+
     res.json({
       server: 'running',
       mongodb: 'connected',
@@ -443,7 +443,13 @@ app.get('/api/student/profile/:indexno', getStudentProfileByIndex);
 app.use('/api/student', studentAuthRoutes);
 app.use('/api/tutor', tutorAuthRoutes);
 app.use('/api/admin', adminAuthRoutes);
-app.use('/api', requireTutor);
+// Students need read-only access to marks; every other API endpoint remains tutor-only.
+app.use('/api', (req, res, next) => {
+  if (req.method === 'GET' && req.path === '/marks') {
+    return requireStudentOrTutor(req, res, next);
+  }
+  return requireTutor(req, res, next);
+});
 
 // --- ENDPOINTS START HERE ---
 
@@ -453,7 +459,15 @@ app.get('/api/marks', async (req, res) => {
     console.log('📨 Request received: GET /api/marks');
     await ensureNumericIds(MarksEntry, 'mark_id');
 
-    const entries = await MarksEntry.find()
+    let query = {};
+    if (req.student) {
+      const studentRecord = await Student.findOne({
+        indexno: { $regex: `^${escapeRegExp(req.student.id)}$`, $options: 'i' }
+      }).select('_id');
+      if (!studentRecord) return res.json([]);
+      query = { student: studentRecord._id };
+    }
+    const entries = await MarksEntry.find(query)
       .populate('student', 'indexno')
       .populate('subject', 'name')
       .populate('paperCategory', 'name')
