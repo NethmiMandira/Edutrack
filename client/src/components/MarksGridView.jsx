@@ -10,9 +10,12 @@ export default function MarksGridView({
 
   const displayMarks = useMemo(() => {
     return [...data].sort((a, b) => {
-      const dateA = a.date ? new Date(a.date).getTime() : 0;
-      const dateB = b.date ? new Date(b.date).getTime() : 0;
-      return sortOrder === "desc" ? dateB - dateA : dateA - dateB;
+      // Sort by numericId (auto-incrementing on creation) instead of the
+      // exam's `date` field, so "Newest" always means "most recently added
+      // to the system" regardless of which exam date the mark is for.
+      const idA = Number(a.numericId) || 0;
+      const idB = Number(b.numericId) || 0;
+      return sortOrder === "desc" ? idB - idA : idA - idB;
     });
   }, [data, sortOrder]);
 
