@@ -18,12 +18,35 @@ const API = axios.create({
   baseURL: baseURL
 });
 
+// Endpoints that are tutor-only on the server (see server.js requireTutor middleware).
+// These must always use the tutor token, never the student token, even if a
+// studentToken is also present in localStorage.
+const TUTOR_ONLY_PATHS = ['/students', '/subjects', '/categories', '/marks'];
+
 // Add request interceptor for logging
 API.interceptors.request.use(
   config => {
     const tutorToken = localStorage.getItem('tutorToken');
     const studentToken = localStorage.getItem('studentToken');
-    const token = studentToken || tutorToken;
+
+    // Normalize the request path (strip baseURL/query string) so matching is reliable
+    const requestPath = (config.url || '').split('?')[0];
+    const isTutorOnlyPath = TUTOR_ONLY_PATHS.some(p => requestPath.startsWith(p));
+
+    // GET /marks is allowed for students too — only force the tutor token
+    // for /marks when it's not a GET (POST/PUT/DELETE are tutor-only).
+    const isStudentAllowedMarksGet =
+      requestPath.startsWith('/marks') && (config.method || 'get').toLowerCase() === 'get';
+
+    let token;
+    if (isTutorOnlyPath && !isStudentAllowedMarksGet) {
+      // Tutor-only endpoint: never fall back to a stray studentToken
+      token = tutorToken;
+    } else {
+      // Shared/student endpoint: prefer whichever role is actually logged in here
+      token = studentToken || tutorToken;
+    }
+
     if (token && !config.headers?.Authorization) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
