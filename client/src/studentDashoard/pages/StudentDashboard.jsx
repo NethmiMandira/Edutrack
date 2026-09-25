@@ -54,16 +54,17 @@ const StudentDashboard = () => {
       setLoading(true);
       try {
         const studentRaw = localStorage.getItem('student');
+        const studentToken = localStorage.getItem('studentToken');
         const student = studentRaw ? JSON.parse(studentRaw) : null;
         const studentIndexNo = String(student?.indexno || '').trim();
 
-        if (!studentIndexNo) {
+        if (!studentIndexNo || !studentToken) {
           setPapers([]);
-          setMessageBox({ message: 'Student session not found. Please login again.', type: 'error' });
+          setMessageBox({ message: 'Your student session has expired. Please login again.', type: 'error' });
           return;
         }
 
-        const response = await API.get('/marks', { 
+        const response = await API.get('/marks', {
           signal: controller.signal,
         });
 
@@ -84,7 +85,12 @@ const StudentDashboard = () => {
         setPapers(studentPapers);
       } catch (err) {
         if (err.name !== 'AbortError') {
-          setMessageBox({ message: err.message || 'Unable to load recent papers.', type: 'error' });
+          if (err.response?.status === 401) {
+            localStorage.removeItem('studentToken');
+            setMessageBox({ message: 'Your student session has expired. Please login again.', type: 'error' });
+          } else {
+            setMessageBox({ message: err.response?.data?.error || err.message || 'Unable to load recent papers.', type: 'error' });
+          }
           setPapers([]);
         }
       } finally {

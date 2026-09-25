@@ -24,8 +24,8 @@ const StudentLogin = () => {
       const data = response.data;
       // Axios responses don't have `ok` (that's a Fetch API property).
       // Check status and payload instead.
-      if (response.status !== 200 || !data || !data.student) {
-        setError(data?.error || 'Login failed');
+      if (response.status !== 200 || !data || !data.student || !data.token) {
+        setError(data?.error || 'Login failed. Please try again.');
         setLoading(false);
         return;
       }

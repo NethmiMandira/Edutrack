@@ -23,7 +23,7 @@ API.interceptors.request.use(
   config => {
     const tutorToken = localStorage.getItem('tutorToken');
     const studentToken = localStorage.getItem('studentToken');
-    const token = tutorToken || studentToken;
+    const token = studentToken || tutorToken;
     if (token && !config.headers?.Authorization) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
